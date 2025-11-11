@@ -32,7 +32,7 @@ class CarouselWidget {
   ];
 
   static Widget carousel(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 340,
       child: CarouselSlider(

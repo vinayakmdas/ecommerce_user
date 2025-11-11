@@ -2,6 +2,7 @@ import 'package:ecommerce_fasion/features/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class ShopCategory {
   static Widget shopCategoryHeading() {
@@ -23,41 +24,41 @@ class ShopCategory {
       ),
     );
   }
-  
+
   static Widget circleBrand() {
     List<Map<String, dynamic>> categoriesItem = [
       {
         'name': 'Shirts',
         'icon': FontAwesomeIcons.shirt,
-          'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
       {
         'name': 'Pants',
         'icon': FontAwesomeIcons.vest,
-          'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
       {
         'name': 'Shoes',
         'icon': FontAwesomeIcons.shoePrints,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
       {
         'name': 'Sunglasses',
         'icon': FontAwesomeIcons.glasses,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
       {
         'name': 'Watch',
         'icon': FontAwesomeIcons.clock,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
       {
         'name': 'Bags',
         'icon': FontAwesomeIcons.bagShopping,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)]
+        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
       },
     ];
-    
+
     return SizedBox(
       height: 130,
       child: ListView.builder(
@@ -71,6 +72,8 @@ class ShopCategory {
             child: GestureDetector(
               onTap: () {
                 print('${categoriesItem[index]['name']} selected');
+
+                context.push('/categoryscreen');
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -87,7 +90,8 @@ class ShopCategory {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: categoriesItem[index]['gradient'][0].withOpacity(0.4),
+                          color: categoriesItem[index]['gradient'][0]
+                              .withOpacity(0.4),
                           blurRadius: 12,
                           offset: Offset(0, 6),
                           spreadRadius: 0,
@@ -103,7 +107,7 @@ class ShopCategory {
                   SizedBox(height: 10),
                   Text(
                     categoriesItem[index]['name'],
-                    style: TextStyle( 
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColors.blackColor,
