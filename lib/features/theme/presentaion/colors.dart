@@ -19,15 +19,15 @@ class AppColors {
 
   //^ Scafold  baground Product card Containern  
 
-  static const Color scafoldBaground  = Color.fromARGB(255, 220, 211, 187);
-  static const Color productCard = Color(0xFFF5EEDC);
-  static const Color container  = Color(0xFFF5EEDC);
+  static const Color scafoldBaground  = Color.fromARGB(255, 253, 242, 211);
+  static const Color productCard = Color.fromARGB(255, 253, 242, 211);
+  static const Color container  = Color.fromARGB(255, 253, 242, 211);
 
   //^ Secondory botton Sucess  subtittle icon  
 
-  static const Color secondarybuttons  = Color(0xFFF4FB477);
-  static const Color subtittleIcon = Color(0xFFF4FB477);
-  static const Color sucessState  = Color(0xFFF4FB477);
+  static const Color secondarybuttons  = Color(0xFF4fb477);
+  static const Color subtittleIcon = Color(0xFF4fb477);
+  static const Color sucessState  = Color(0xFF4fb477);
 
 
  //^tittle Description  

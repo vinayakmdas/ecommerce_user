@@ -1,8 +1,8 @@
+import 'package:ecommerce_fasion/features/category_Screen.dart/screen/category_scren.dart';
 import 'package:ecommerce_fasion/features/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+
 
 class ShopCategory {
   static Widget shopCategoryHeading() {
@@ -25,58 +25,66 @@ class ShopCategory {
     );
   }
 
-  static Widget circleBrand() {
+ static Widget circleBrand(BuildContext context) {
     List<Map<String, dynamic>> categoriesItem = [
-      {
-        'name': 'Shirts',
-        'icon': FontAwesomeIcons.shirt,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
-      {
-        'name': 'Pants',
-        'icon': FontAwesomeIcons.vest,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
-      {
-        'name': 'Shoes',
-        'icon': FontAwesomeIcons.shoePrints,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
-      {
-        'name': 'Sunglasses',
-        'icon': FontAwesomeIcons.glasses,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
-      {
-        'name': 'Watch',
-        'icon': FontAwesomeIcons.clock,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
-      {
-        'name': 'Bags',
-        'icon': FontAwesomeIcons.bagShopping,
-        'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
-      },
+    {
+      'name': 'Shirts',
+      'icon': FontAwesomeIcons.shirt,
+      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'image': 'https://i.pinimg.com/1200x/6b/b6/64/6bb66426b5a41d816a5bff21f7704b4c.jpg',
+      'categoryId' : '8VjWE1FLzMg730rXpS0o'
+    },
+    {
+      'name': 'Pants',
+      'icon': FontAwesomeIcons.vest,
+      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'image': 'https://i.pinimg.com/1200x/05/e2/1c/05e21cb0736aac2b93b8efa9093c3b6c.jpg',
+    },
+    {
+      'name': 'Shoes',
+      'icon': FontAwesomeIcons.shoePrints,
+      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'image': 'https://i.pinimg.com/1200x/9b/94/8a/9b948a909015f61161719a31e5165c96.jpg',
+    },
+    {
+      'name': 'Sunglasses',
+      'icon': FontAwesomeIcons.glasses,
+      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'image': 'https://i.pinimg.com/1200x/13/17/5a/13175a7be14ce6bb9da92a4c0deac33e.jpg',
+    },
+    {
+      'name': 'Watch',
+      'icon': FontAwesomeIcons.clock,
+      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'image': 'https://i.pinimg.com/1200x/44/0e/5e/440e5e07a537f3dbe5a466ce27c7e967.jpg',
+    },
     ];
 
     return SizedBox(
       height: 130,
       child: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 12),
-        itemCount: categoriesItem.length,
         scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
+        itemCount: categoriesItem.length,
         itemBuilder: (context, index) {
+          final item = categoriesItem[index];
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: GestureDetector(
               onTap: () {
-                print('${categoriesItem[index]['name']} selected');
-
-                context.push('/categoryscreen');
+                // ✅ simple push navigation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CategoryScreen(
+                      imageUrl: item['image'],
+                      name: item['name'],
+                      categoryId:  item['categoryId'],
+                    ),
+                  ),
+                );
               },
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 70,
@@ -84,34 +92,19 @@ class ShopCategory {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: categoriesItem[index]['gradient'],
+                        colors: item['gradient'],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: categoriesItem[index]['gradient'][0]
-                              .withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: Offset(0, 6),
-                          spreadRadius: 0,
-                        ),
-                      ],
                     ),
-                    child: Icon(
-                      categoriesItem[index]['icon'],
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                    child: Icon(item['icon'], color: Colors.white, size: 28),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    categoriesItem[index]['name'],
+                    item['name'],
                     style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
                       color: AppColors.blackColor,
-                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],

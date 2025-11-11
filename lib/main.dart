@@ -1,6 +1,5 @@
 import 'package:ecommerce_fasion/features/auth/presentation/loginScreen/screens/loginScreen.dart';
 import 'package:ecommerce_fasion/features/auth/presentation/signup/screens/signup_screen.dart';
-import 'package:ecommerce_fasion/features/category_Screen.dart/screen/category_scren.dart';
 import 'package:ecommerce_fasion/features/home_screen/screen/homescreen.dart';
 import 'package:ecommerce_fasion/features/splash/splash.dart';
 import 'package:ecommerce_fasion/firebase_options.dart';
@@ -52,11 +51,7 @@ class MyApp extends StatelessWidget {
   builder: (context, state) => const HomeScreen(),
  
  ),
-   GoRoute(
-  path: '/categoryscreen',
-  builder: (context, state) => const CategoryScren(),
- 
- )
+
  ]
 
   );
