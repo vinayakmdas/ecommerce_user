@@ -1,5 +1,5 @@
-import 'package:ecommerce_fasion/features/category_Screen.dart/screen/category_scren.dart';
-import 'package:ecommerce_fasion/features/theme/presentaion/colors.dart';
+import 'package:ecommerce_fasion/features/category/presentaion/category_scren.dart';
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -30,32 +30,33 @@ class ShopCategory {
     {
       'name': 'Shirts',
       'icon': FontAwesomeIcons.shirt,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'gradient': [Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/6b/b6/64/6bb66426b5a41d816a5bff21f7704b4c.jpg',
       'categoryId' : '8VjWE1FLzMg730rXpS0o'
     },
     {
       'name': 'Pants',
       'icon': FontAwesomeIcons.vest,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'gradient':[Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/05/e2/1c/05e21cb0736aac2b93b8efa9093c3b6c.jpg',
+       'categoryId' : 'usQwmcFj6NQuKl5YpEg9'
     },
     {
       'name': 'Shoes',
       'icon': FontAwesomeIcons.shoePrints,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'gradient':[Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/9b/94/8a/9b948a909015f61161719a31e5165c96.jpg',
     },
     {
       'name': 'Sunglasses',
       'icon': FontAwesomeIcons.glasses,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'gradient': [Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/13/17/5a/13175a7be14ce6bb9da92a4c0deac33e.jpg',
     },
     {
       'name': 'Watch',
       'icon': FontAwesomeIcons.clock,
-      'gradient': [Color(0xFF30cfd0), Color(0xFF330867)],
+      'gradient':[Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/44/0e/5e/440e5e07a537f3dbe5a466ce27c7e967.jpg',
     },
     ];

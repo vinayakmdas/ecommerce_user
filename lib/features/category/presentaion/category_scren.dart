@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_fasion/features/category_Screen.dart/widget/category_widget.dart';
-import 'package:ecommerce_fasion/features/theme/presentaion/colors.dart';
+import 'package:ecommerce_fasion/features/category/widget/category_widget.dart';
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CategoryScreen extends StatelessWidget {
   final String imageUrl;
@@ -84,7 +85,11 @@ class CategoryScreen extends StatelessWidget {
                               color: AppColors.white,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+
+                                 context.push('/brandItem');
+
+                          },
                         ),
                       ),
                     );

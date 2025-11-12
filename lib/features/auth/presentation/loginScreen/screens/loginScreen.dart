@@ -3,7 +3,7 @@
  
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/features/auth/presentation/loginScreen/widget/loginwidget.dart';
-import 'package:ecommerce_fasion/features/theme/presentaion/colors.dart';
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

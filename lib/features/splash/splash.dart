@@ -55,7 +55,7 @@ class _SplashAnimationScreenState extends State<SplashAnimationScreen>
     if (!mounted) return;
 
     if (isLogin) {
-      context.go('/homescreen'); 
+      context.go('/bottomnScreen'); 
     } else {
       context.go('/Login'); 
     }
