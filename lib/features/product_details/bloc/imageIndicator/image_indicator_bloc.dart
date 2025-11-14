@@ -1,13 +1,16 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 part 'image_indicator_event.dart';
 part 'image_indicator_state.dart';
 
 class ImageIndicatorBloc extends Bloc<ImageIndicatorEvent, ImageIndicatorState> {
-  ImageIndicatorBloc() : super(ImageIndicatorInitial()) {
+  ImageIndicatorBloc() : super((ImageIndicatorState(currentPage: 0))) {
     on<ImageIndicatorEvent>((event, emit) {
-      // TODO: implement event handler
+
+      emit(ImageIndicatorState(currentPage: event.index));
+
     });
   }
 }

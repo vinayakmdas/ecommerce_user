@@ -1,4 +1,9 @@
 part of 'image_indicator_bloc.dart';
 
-@immutable
-sealed class ImageIndicatorEvent {}
+
+ class ImageIndicatorEvent {
+
+  final int  index;
+
+  ImageIndicatorEvent(this.index);
+ }

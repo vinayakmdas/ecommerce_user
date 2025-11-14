@@ -1,6 +1,10 @@
 part of 'image_indicator_bloc.dart';
 
-@immutable
-sealed class ImageIndicatorState {}
+ class ImageIndicatorState {
 
-final class ImageIndicatorInitial extends ImageIndicatorState {}
+  final int currentPage;
+
+  const ImageIndicatorState({required this.currentPage});
+}
+
+
