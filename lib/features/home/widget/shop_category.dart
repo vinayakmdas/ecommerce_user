@@ -46,6 +46,7 @@ class ShopCategory {
       'icon': FontAwesomeIcons.shoePrints,
       'gradient':[Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/9b/94/8a/9b948a909015f61161719a31e5165c96.jpg',
+        'categoryId' : 'jMCzId9h0BIzj6JGY56Q'
     },
     {
       'name': 'Sunglasses',

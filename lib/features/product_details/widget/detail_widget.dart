@@ -1,4 +1,5 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:readmore/readmore.dart';
 
@@ -136,5 +137,28 @@ class DetailCustome {
     ),
       ],
     );
+  }
+
+ static Widget  priceText(String price){
+  return Text("\$$price",style: TextStyle(fontSize: 32,color: AppColors.categoryTitle ,fontWeight: FontWeight.w900),);
+ } 
+ 
+  static Widget  addtocartButton(){
+                    return ElevatedButton(
+                       style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.addToCart,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                     
+                    ),
+                      onPressed: (){}, child: Row(
+                        children: [
+                          Icon(Icons.add_shopping_cart,color: AppColors.white,),
+                          SizedBox(width: 16,), 
+                          Text ("Add to Cart",style: TextStyle(color: AppColors.white),),
+                        ],
+                      ));
+    
   }
 }

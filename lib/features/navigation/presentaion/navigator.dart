@@ -1,6 +1,7 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
+import 'package:ecommerce_fasion/features/favorites/presentaion/favorite_screen.dart';
 import 'package:ecommerce_fasion/features/home/presentaion/homescreen.dart';
 import 'package:ecommerce_fasion/features/navigation/bloc/imageIndex/select_index_bloc.dart';
 import 'package:ecommerce_fasion/features/search/presentation/search_screen.dart';
@@ -28,16 +29,16 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final List<Widget> screens = const [
     HomeScreen(),
     Searchscreen(),
-    HomeScreen(),
-    HomeScreen(),
+    FavoriteScreen(),
     HomeScreen(),
     HomeScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => SelectIndexBloc(),
-      child: BlocBuilder<SelectIndexBloc, int >(
+    return BlocProvider(
+      create: (_) => SelectIndexBloc(),
+      child: BlocBuilder<SelectIndexBloc, int>(
         builder: (context, state) {
           return Scaffold(
             body: screens[state],
@@ -47,7 +48,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 items: items,
                 backgroundColor: AppColors.categoryTitle,
                 color: Colors.white,
-                colorSelected:  AppColors.categoryTitle,
+                colorSelected: AppColors.categoryTitle,
                 indexSelected: state,
                 onTap: (int index) {
                   context.read<SelectIndexBloc>().changevalue(index);

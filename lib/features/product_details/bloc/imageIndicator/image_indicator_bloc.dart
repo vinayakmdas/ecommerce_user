@@ -10,7 +10,7 @@ class ImageIndicatorBloc extends Bloc<ImageIndicatorEvent, ImageIndicatorState> 
     on<ImageIndicatorEvent>((event, emit) {
 
       emit(ImageIndicatorState(currentPage: event.index));
-
+ 
     });
   }
 }
