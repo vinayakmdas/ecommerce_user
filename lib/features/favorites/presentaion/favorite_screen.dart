@@ -8,19 +8,20 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-       final user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.scafoldBaground,
-        title: Text(
+        title: const Text(
           'My Favorites',
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
       ),
-    
-    body:  StreamBuilder <List<Map<String,dynamic>> >(
-      stream: FavoritesCustome.getFavoriteProducts(user!.uid) 
-      , builder:   (context, snapshot){
+
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: FavoritesCustome.getFavoriteProducts(user!.uid),
+        builder: (context, snapshot) {
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -34,7 +35,8 @@ class FavoriteScreen extends StatelessWidget {
               ),
             );
           }
-  final favorites = snapshot.data!;
+
+          final favorites = snapshot.data!;
 
           return ListView.builder(
             itemCount: favorites.length,
@@ -42,108 +44,102 @@ class FavoriteScreen extends StatelessWidget {
               final item = favorites[index];
 
               return Card(
-  color: AppColors.container,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16),
-  ),
-  elevation: 3,
-  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-
-  child: Container(
-    padding: EdgeInsets.all(12),
-    child: Row(
-      children: [
-        // =======================
-        // Product Image
-        // =======================
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            item["images"][0],
-            width: 110,
-            height: 110,
-            fit: BoxFit.cover,
-          ),
-        ),
-
-        SizedBox(width: 15),
-
-        // =======================
-        // Text Section
-        // =======================
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item["brandId"] ?? "",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                color: AppColors.container,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ),
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
 
-              SizedBox(height: 4),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
 
-              Text(
-                item["productName"] ?? "",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+                      // ------- IMAGE -------
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          item["images"][0],
+                          width: 110,
+                          height: 110,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
 
-              SizedBox(height: 6),
+                      const SizedBox(width: 15),
 
-              Text(
-                "₹${item['price']}",
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal,
-                ),
-              ),
+                      // -------- TEXT DETAILS --------
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item["brandId"] ?? "",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
 
-              SizedBox(height: 6),
+                            Text(
+                              item["productName"] ?? "",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
 
-             
-            ],
-          ),
-        ),
+                            const SizedBox(height: 6),
 
-       
-        Align(
-          alignment: Alignment.topRight,
-          child: InkWell(
-            onTap: () {
-              FavoritesCustome.removeFavorite(user.uid, item["id"]);
-            },
-            child: Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 5,
+                            Text(
+                              "₹${item['price']}",
+                              style: const TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // ---------- HEART ICON ----------
+                      InkWell(
+                        onTap: () async {
+                          await FavoritesCustome.removeFavorite(
+                            user.uid,
+                            item["id"],
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,   // ALWAYS RED
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Icon(Icons.favorite, color: Colors.red),
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-);
-
+                ),
+              );
             },
           );
-      }),
+        },
+      ),
     );
-
   }
 }

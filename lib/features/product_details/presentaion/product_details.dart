@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class ProductDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> productData;
   final String productId;
@@ -17,36 +16,68 @@ class ProductDetailsScreen extends StatelessWidget {
     super.key,
     required this.productData,
     required this.productId,
-  });
+  }) {
+    checkFavoriteStatus();
+  }
 
   final PageController _pageController = PageController();
+  final ValueNotifier<bool> isFavorite = ValueNotifier(false);
 
-  final int currentPage = 0;
-   
-
-   Future <void>addToFavorite()async{
-
+  // ===========================
+  // CHECK IF PRODUCT IS FAVORITE
+  // ===========================
+  Future<void> checkFavoriteStatus() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
-   final firstVariant = (productData["variants"] as List).first;
+    final doc = await FirebaseFirestore.instance
+        .collection("favorites")
+        .doc(userId)
+        .collection("items")
+        .doc(productId)
+        .get();
 
-   await FirebaseFirestore.instance.collection("favorites").doc(userId).collection("items").doc(productId)
-      .set({
-    "id": productId,
-    "productName": productData["productName"] ?? "",
-    "brandId": productData["brandId"] ?? "",
-    "description": productData["description"] ?? "",
-    "images": firstVariant["images"] ?? [],
-    "price": firstVariant["price"] ?? 0,
-    "regularPrice": firstVariant["regularPrise"] ?? 0,
-    "createdAt": FieldValue.serverTimestamp(),
-  });
-   }
+    isFavorite.value = doc.exists;
+  }
+
+  // ===========================
+  // ADD / REMOVE FROM FAVORITES
+  // ===========================
+  Future<void> toggleFavorite() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    final favRef = FirebaseFirestore.instance
+        .collection("favorites")
+        .doc(userId)
+        .collection("items")
+        .doc(productId);
+
+    final doc = await favRef.get();
+
+    if (doc.exists) {
+      // REMOVE FAVORITE
+      await favRef.delete();
+      isFavorite.value = false;
+    } else {
+      // ADD FAVORITE
+      final firstVariant = (productData["variants"] as List).first;
+
+      await favRef.set({
+        "id": productId,
+        "productName": productData["productName"] ?? "",
+        "brandId": productData["brandId"] ?? "",
+        "description": productData["description"] ?? "",
+        "images": firstVariant["images"] ?? [],
+        "price": firstVariant["price"] ?? 0,
+        "regularPrice": firstVariant["regularPrise"] ?? 0,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
+      isFavorite.value = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ImageIndicatorBloc()),
@@ -55,22 +86,44 @@ class ProductDetailsScreen extends StatelessWidget {
 
       child: Scaffold(
         backgroundColor: AppColors.scafoldBaground,
+
+        // ===========================
+        // APP BAR WITH FAVORITE ICON
+        // ===========================
         appBar: AppBar(
           backgroundColor: AppColors.productCard,
           actions: [
-            IconButton(
-              onPressed: () async{
+            ValueListenableBuilder(
+              valueListenable: isFavorite,
+              builder: (context, value, _) {
+                return IconButton(
+                  onPressed: () async {
+                    await toggleFavorite();
 
-                await addToFavorite();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Added to Favorites")),
-    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          isFavorite.value
+                              ? "Added to Favorites"
+                              : "Removed from Favorites",
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    value ? Icons.favorite : Icons.favorite_border,
+                    color: value ? Colors.red : Colors.white,
+                  ),
+                );
               },
-              icon: Icon(Icons.favorite_border_outlined),
             ),
             SizedBox(width: 14),
           ],
         ),
+
+        // ===========================
+        // BODY SECTION
+        // ===========================
         body: BlocBuilder<VariantBloc, VariantState>(
           builder: (context, variantState) {
             final variants = productData["variants"] as List? ?? [];
@@ -92,23 +145,22 @@ class ProductDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // IMAGES SECTION
                       if (images.isNotEmpty)
                         Imagecontainer(
                           images: images,
                           currentPage: imageState.currentPage,
                           onPageChanged: (i) {
                             context.read<ImageIndicatorBloc>().add(
-                              ImageIndicatorEvent(i),
-                            );
+                                  ImageIndicatorEvent(i),
+                                );
                           },
                           controller: _pageController,
                         ),
 
                       const SizedBox(height: 20),
 
-                      // ===============================
-                      //          COLOR SELECTOR
-                      // ===============================
+                      // COLOR SELECTOR
                       Text(
                         "Colors",
                         style: TextStyle(
@@ -125,13 +177,11 @@ class ProductDetailsScreen extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               context.read<VariantBloc>().add(
-                                VariantEvent(index),
-                              );
-
-                              // reset image indicator when variant changes
+                                    VariantEvent(index),
+                                  );
                               context.read<ImageIndicatorBloc>().add(
-                                ImageIndicatorEvent(0),
-                              );
+                                    ImageIndicatorEvent(0),
+                                  );
                               _pageController.jumpToPage(0);
                             },
                             child: Container(
@@ -156,6 +206,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
+                      // SIZE SELECTOR
                       Text(
                         "Size",
                         style: TextStyle(
@@ -167,8 +218,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       Row(
                         children: List.generate(variants.length, (index) {
-                          final size =
-                              variants[index]["selectedOptions"]?["attr_size_fashion"] ??
+                          final size = variants[index]["selectedOptions"]
+                                  ?["attr_size_fashion"] ??
                               "";
 
                           if (size.isEmpty) return SizedBox();
@@ -179,8 +230,8 @@ class ProductDetailsScreen extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               context.read<VariantBloc>().add(
-                                VariantEvent(index),
-                              );
+                                    VariantEvent(index),
+                                  );
                             },
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
@@ -189,16 +240,16 @@ class ProductDetailsScreen extends StatelessWidget {
                                 vertical: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: isSelected ? Colors.black : Colors.white,
+                                color:
+                                    isSelected ? Colors.black : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: Colors.grey),
                               ),
                               child: Text(
                                 size,
                                 style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -208,18 +259,21 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       const SizedBox(height: 30),
 
+                      // BRAND NAME
                       DetailCustome.brandname(
                         productData["brandId"] ?? "no brand",
                       ),
 
                       const SizedBox(height: 20),
 
+                      // PRODUCT TITLE
                       DetailCustome.productName(
                         productData["productName"] ?? "Unnamed",
                       ),
 
                       const SizedBox(height: 20),
 
+                      // PRICE
                       DetailCustome.priseDetails(
                         price.toString(),
                         regularPrise.toString(),
@@ -240,16 +294,17 @@ class ProductDetailsScreen extends StatelessWidget {
           },
         ),
 
+        // ===========================
+        // BOTTOM CART BAR
+        // ===========================
         bottomNavigationBar: BlocBuilder<VariantBloc, VariantState>(
           builder: (context, variantState) {
             final variants = productData["variants"] as List? ?? [];
 
-            if (variants.isEmpty) {
-              return SizedBox();
-            }
+            if (variants.isEmpty) return SizedBox();
 
             final variant = variants[variantState.selecedvarient];
-            final price = variant["price"] ?? 0; // SALE PRICE
+            final price = variant["price"] ?? 0;
 
             return SizedBox(
               height: 86.0,
