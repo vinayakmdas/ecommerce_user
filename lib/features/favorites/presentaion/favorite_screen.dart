@@ -22,7 +22,6 @@ class FavoriteScreen extends StatelessWidget {
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: FavoritesCustome.getFavoriteProducts(user!.uid),
         builder: (context, snapshot) {
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -49,13 +48,15 @@ class FavoriteScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 3,
-                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                margin: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 16,
+                ),
 
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   child: Row(
                     children: [
-
                       // ------- IMAGE -------
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -117,18 +118,15 @@ class FavoriteScreen extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             shape: BoxShape.circle,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 5,
-                              ),
+                            boxShadow: [
+                              BoxShadow(color: AppColors.blackColor, blurRadius: 5),
                             ],
                           ),
                           child: const Icon(
                             Icons.favorite,
-                            color: Colors.red,   // ALWAYS RED
+                            color: Colors.red, // ALWAYS RED
                           ),
                         ),
                       ),

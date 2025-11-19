@@ -100,19 +100,11 @@ class ProductDetailsScreen extends StatelessWidget {
                   onPressed: () async {
                     await toggleFavorite();
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          isFavorite.value
-                              ? "Added to Favorites"
-                              : "Removed from Favorites",
-                        ),
-                      ),
-                    );
+                   
                   },
                   icon: Icon(
                     value ? Icons.favorite : Icons.favorite_border,
-                    color: value ? Colors.red : Colors.white,
+                    color: value ? Colors.red : AppColors.blackColor,
                   ),
                 );
               },
