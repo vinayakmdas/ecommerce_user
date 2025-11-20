@@ -1,4 +1,5 @@
 import 'package:ecommerce_fasion/features/home/widget/carousel_widget.dart';
+import 'package:ecommerce_fasion/features/home/widget/productGrid.dart';
 import 'package:ecommerce_fasion/features/home/widget/shop_category.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,9 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     ShopCategory.shopCategoryHeading(),
                     SizedBox(height: 15,),
-                    ShopCategory.circleBrand(context)
+                    ShopCategory.circleBrand(context),
+
+                    Productgrid()
                   ], 
                 ),
               )

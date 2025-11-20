@@ -93,7 +93,7 @@ class BrandItem extends StatelessWidget {
                   price: price,
                   regularPrice: regularPrice,
                   onFavoriteTap: () {
-                  print("is tapped");
+                  //  favorite
                   },
                 ),
               );

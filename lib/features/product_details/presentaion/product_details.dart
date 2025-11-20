@@ -85,11 +85,7 @@ class ProductDetailsScreen extends StatelessWidget {
       ],
 
       child: Scaffold(
-        backgroundColor: AppColors.scafoldBaground,
-
-        // ===========================
-        // APP BAR WITH FAVORITE ICON
-        // ===========================
+   
         appBar: AppBar(
           backgroundColor: AppColors.productCard,
           actions: [
