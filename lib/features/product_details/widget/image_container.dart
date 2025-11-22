@@ -1,3 +1,4 @@
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 
 class Imagecontainer extends StatelessWidget {
@@ -48,7 +49,7 @@ class Imagecontainer extends StatelessWidget {
               width: isActive ? 12 : 8,
               height: 8,
               decoration: BoxDecoration(
-                color: isActive ? Colors.black : Colors.grey.shade400,
+                color: isActive ? AppColors.blackColor : AppColors.grey,
                 borderRadius: BorderRadius.circular(10),
               ),
             );

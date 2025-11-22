@@ -143,22 +143,28 @@ class DetailCustome {
   return Text("\$$price",style: TextStyle(fontSize: 32,color: AppColors.categoryTitle ,fontWeight: FontWeight.w900),);
  } 
  
-  static Widget  addtocartButton(){
-                    return ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.addToCart,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                     
-                    ),
-                      onPressed: (){}, child: Row(
-                        children: [
-                          Icon(Icons.add_shopping_cart,color: AppColors.white,),
-                          SizedBox(width: 16,), 
-                          Text ("Add to Cart",style: TextStyle(color: AppColors.white),),
-                        ],
-                      ));
-    
-  }
+static Widget addtocartButton({required VoidCallback onPressed}) {
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppColors.addToCart,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    ),
+    onPressed: onPressed,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.add_shopping_cart, color: AppColors.white),
+        SizedBox(width: 16),
+        Text(
+          "Add to Cart",
+          style: TextStyle(color: AppColors.white, fontSize: 16),
+        ),
+      ],
+    ),
+  );
+}
+
 }

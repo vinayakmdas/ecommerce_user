@@ -23,9 +23,7 @@ class ProductDetailsScreen extends StatelessWidget {
   final PageController _pageController = PageController();
   final ValueNotifier<bool> isFavorite = ValueNotifier(false);
 
-  // ===========================
-  // CHECK IF PRODUCT IS FAVORITE
-  // ===========================
+
   Future<void> checkFavoriteStatus() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -100,7 +98,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   },
                   icon: Icon(
                     value ? Icons.favorite : Icons.favorite_border,
-                    color: value ? Colors.red : AppColors.blackColor,
+                    color: value ? AppColors.buyNow : AppColors.blackColor,
                   ),
                 );
               },
@@ -109,9 +107,6 @@ class ProductDetailsScreen extends StatelessWidget {
           ],
         ),
 
-        // ===========================
-        // BODY SECTION
-        // ===========================
         body: BlocBuilder<VariantBloc, VariantState>(
           builder: (context, variantState) {
             final variants = productData["variants"] as List? ?? [];
@@ -177,10 +172,11 @@ class ProductDetailsScreen extends StatelessWidget {
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
+                                
                                 border: Border.all(
                                   color: variantState.selecedvarient == index
-                                      ? Colors.black
-                                      : Colors.grey,
+                                      ? AppColors.categoryTitle
+                                      : AppColors.grey,
                                 ),
                               ),
                               child: Text(
@@ -229,15 +225,15 @@ class ProductDetailsScreen extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color:
-                                    isSelected ? Colors.black : Colors.white,
+                                    isSelected ? AppColors.categoryTitle : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey),
+                                border: Border.all(color: AppColors.grey),
                               ),
                               child: Text(
                                 size,
                                 style: TextStyle(
                                   color:
-                                      isSelected ? Colors.white : Colors.black,
+                                      isSelected ? AppColors.white : AppColors.blackColor,
                                 ),
                               ),
                             ),
@@ -247,21 +243,20 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       const SizedBox(height: 30),
 
-                      // BRAND NAME
                       DetailCustome.brandname(
                         productData["brandId"] ?? "no brand",
                       ),
 
                       const SizedBox(height: 20),
 
-                      // PRODUCT TITLE
+                  
                       DetailCustome.productName(
                         productData["productName"] ?? "Unnamed",
                       ),
 
                       const SizedBox(height: 20),
 
-                      // PRICE
+                   
                       DetailCustome.priseDetails(
                         price.toString(),
                         regularPrise.toString(),
@@ -282,9 +277,6 @@ class ProductDetailsScreen extends StatelessWidget {
           },
         ),
 
-        // ===========================
-        // BOTTOM CART BAR
-        // ===========================
         bottomNavigationBar: BlocBuilder<VariantBloc, VariantState>(
           builder: (context, variantState) {
             final variants = productData["variants"] as List? ?? [];
@@ -302,7 +294,17 @@ class ProductDetailsScreen extends StatelessWidget {
                   children: [
                     DetailCustome.priceText(price.toString()),
                     Spacer(),
-                    DetailCustome.addtocartButton(),
+                    DetailCustome.addtocartButton ( 
+
+                      onPressed: ()async{
+                          final selectedVariant =
+        context.read<VariantBloc>().state.selecedvarient;
+   await addToCart(selectedVariant);
+     ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Added to Cart")),
+    );
+                      }
+                    ),
                   ],
                 ),
               ),
@@ -310,6 +312,37 @@ class ProductDetailsScreen extends StatelessWidget {
           },
         ),
       ),
+      
     );
   }
+  Future<void> addToCart(int selectedVariant) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+
+  final cartRef = FirebaseFirestore.instance
+      .collection("cart")
+      .doc(userId)
+      .collection("items")
+      .doc(productId);
+
+  final doc = await cartRef.get();
+  final variant = productData["variants"][selectedVariant];
+
+  if (doc.exists) {
+    // Already in cart → increase qty
+    await cartRef.update({"qty": FieldValue.increment(1)});
+  } else {
+    // Add new product
+    await cartRef.set({
+      "id": productId,
+      "productName": productData["productName"],
+      "price": variant["price"],
+      "regularPrice": variant["regularPrise"],
+      "images": variant["images"],
+      "qty": 1,
+      "selectedVariantIndex": selectedVariant,
+      "createdAt": FieldValue.serverTimestamp(),
+    });
+  }
+}
+
 }
