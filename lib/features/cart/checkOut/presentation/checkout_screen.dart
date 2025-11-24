@@ -42,57 +42,105 @@ class CheckoutScreen extends StatelessWidget {
                     final data = cartItems[index];
                     final productId = data.id;
 
-                    return Card(
-                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Image.network(
-                              data["images"][0],
-                              width: 60,
-                              fit: BoxFit.cover,
-                            ),
-                          
-                            title: Text(
-                              data["productName"],
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("₹ ${data["price"]}"),
-                          
-                                SizedBox(height: 8),
-                          
-                                quantityButtons(
-                                  qty: data["qty"],
-                                  onIncrease: () => CartCustome.increaseQty(productId),
-                                  onDecrease: () => CartCustome.decreaseQty(productId),
-                                )
-                              ],
-                            ),
-                          
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () => CartCustome.removeItem(productId),
-                            ),
-                          ),
-
-                          Divider(color: AppColors.grey,)
-                          ,InkWell(
-  onTap: () {
-                                CartCustome.saveForLater(productId);
-
-  },
+                   return Card(
+  color: AppColors.container,       // SAME BG COLOR
+  elevation: 3,                      // Slight shadow for premium feel
+  shadowColor: Colors.black12,
+  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(16),
+  ),
   child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12.0),
+    padding: const EdgeInsets.all(12),
+    child: Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // IMAGE
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                data["images"][0],
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            SizedBox(width: 12),
+
+            // TITLE + PRICE + QTY
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data["productName"],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                      color: AppColors.errormessage,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  SizedBox(height: 6),
+
+                  Text(
+                    "₹ ${data["price"]}",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.appBar,
+                    ),
+                  ),
+
+                  SizedBox(height: 10),
+
+                  quantityButtons(
+                    qty: data["qty"],
+                    onIncrease: () =>
+                        CartCustome.increaseQty(productId),
+                    onDecrease: () =>
+                        CartCustome.decreaseQty(productId),
+                  ),
+                ],
+              ),
+            ),
+
+            // DELETE ICON
+            IconButton(
+              icon: Icon(
+                Icons.delete_outline,
+                color: AppColors.errormessage,
+                size: 26,
+              ),
+              onPressed: () => CartCustome.removeItem(productId),
+            ),
+          ],
+        ),
+
+     SizedBox(height: 14),   // space instead of divider
+
+// SAVE FOR LATER BUTTON (FULL WIDTH + BG COLOR)
+InkWell(
+  onTap: () => CartCustome.saveForLater(productId),
+  borderRadius: BorderRadius.circular(12),
+  child: Container(
+    width: double.infinity,                // FULL WIDTH
+    padding: const EdgeInsets.symmetric(vertical: 14),
+    decoration: BoxDecoration(
+      color: AppColors.categoryTitle,      // YOUR COLOR
+      borderRadius: BorderRadius.circular(12),
+    ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
           Icons.bookmark_border,
-          color: AppColors.grey, // or any color you want
+          color: AppColors.white,
           size: 22,
         ),
         SizedBox(width: 6),
@@ -101,17 +149,19 @@ class CheckoutScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.grey,
+            color: AppColors.white,
           ),
         ),
       ],
     ),
   ),
-)
+),
 
-                        ],
-                      ),
-                    );
+      ],
+    ),
+  ),
+);
+
                   },
                 ),
               ),

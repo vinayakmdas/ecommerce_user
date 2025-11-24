@@ -1,6 +1,5 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:readmore/readmore.dart';
 
 class DetailCustome {
