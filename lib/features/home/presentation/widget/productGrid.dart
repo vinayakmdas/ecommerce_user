@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/brandItems/presentaion/widget/appBar_custome.dart';
-import 'package:ecommerce_fasion/features/product_details/presentaion/screen/product_details.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/appBar_custome_brandItem.dart';
+import 'package:ecommerce_fasion/features/home/presentation/screens/product_details.dart';
 import 'package:ecommerce_fasion/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 

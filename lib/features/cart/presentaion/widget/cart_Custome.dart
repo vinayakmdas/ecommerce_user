@@ -2,69 +2,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class CartCustome {
+  static Future<void> increaseQty(String productID) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-static Future <void>increaseQty(String productID)async{
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-
-  final ref = FirebaseFirestore.instance.collection("cart").doc(userId).collection("items").doc(productID);
+    final ref = FirebaseFirestore.instance
+        .collection("cart")
+        .doc(userId)
+        .collection("items")
+        .doc(productID);
 
     await ref.update({"qty": FieldValue.increment(1)});
-}
-
-
-
-static Future<void> decreaseQty(String productId) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-
-  final ref = FirebaseFirestore.instance
-      .collection("cart")
-      .doc(userId)
-      .collection("items")
-      .doc(productId);
-
-  final doc = await ref.get();
-  int qty = doc["qty"];
-
-  if (qty > 1) {
-    await ref.update({"qty": qty - 1});
-  } else {
-    await ref.delete(); 
-  }
-  
   }
 
+  static Future<void> decreaseQty(String productId) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-static Future<void> removeItem(String productId) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
+    final ref = FirebaseFirestore.instance
+        .collection("cart")
+        .doc(userId)
+        .collection("items")
+        .doc(productId);
 
-  await FirebaseFirestore.instance
-      .collection("cart")
-      .doc(userId)
-      .collection("items")
-      .doc(productId)
-      .delete();
-}
+    final doc = await ref.get();
+    int qty = doc["qty"];
 
+    if (qty > 1) {
+      await ref.update({"qty": qty - 1});
+    } else {
+      await ref.delete();
+    }
+  }
 
-static final  _firestore = FirebaseFirestore.instance;
+  static Future<void> removeItem(String productId) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-static final _auth =FirebaseAuth.instance;
+    await FirebaseFirestore.instance
+        .collection("cart")
+        .doc(userId)
+        .collection("items")
+        .doc(productId)
+        .delete();
+  }
 
+  static final _firestore = FirebaseFirestore.instance;
 
-static  Future<void >saveForLater (String docId)async{
+  static final _auth = FirebaseAuth.instance;
 
-final userId = _auth.currentUser!.uid;
+  static Future<void> saveForLater(String docId) async {
+    final userId = _auth.currentUser!.uid;
 
+    DocumentSnapshot itemSnapshtot = await _firestore
+        .collection("cart")
+        .doc(userId)
+        .collection('items')
+        .doc(docId)
+        .get();
 
-  DocumentSnapshot itemSnapshtot = await _firestore.collection("cart")
-  .doc(userId).
-  collection('items')
-  .doc(docId)
-  .get();
+    if (!itemSnapshtot.exists) return;
 
-  if(!itemSnapshtot .exists)return ;
-
-  final data = itemSnapshtot.data() as Map <String,dynamic>; 
+    final data = itemSnapshtot.data() as Map<String, dynamic>;
 
     await _firestore
         .collection("SaveForLater")
@@ -73,8 +69,6 @@ final userId = _auth.currentUser!.uid;
         .doc(docId)
         .set(data);
 
-await removeItem(docId);
-} 
-
-
+    await removeItem(docId);
+  }
 }

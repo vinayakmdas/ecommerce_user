@@ -1,8 +1,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_fasion/features/brandItems/presentaion/screen/brandItem.dart';
+import 'package:ecommerce_fasion/features/home/presentation/screens/brandItem.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/category/presentaion/widget/category_widget.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/category_widget.dart';
 import 'package:ecommerce_fasion/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 

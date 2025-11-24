@@ -1,8 +1,8 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/product_details/presentaion/bloc/imageIndicator/image_indicator_bloc.dart';
-import 'package:ecommerce_fasion/features/product_details/presentaion/bloc/variant_bloc/variant_bloc.dart';
-import 'package:ecommerce_fasion/features/product_details/presentaion/widget/detail_widget.dart';
-import 'package:ecommerce_fasion/features/product_details/presentaion/widget/image_container.dart';
+import 'package:ecommerce_fasion/features/home/presentation/bloc/imageIndicator/image_indicator_bloc.dart';
+import 'package:ecommerce_fasion/features/home/presentation/bloc/variant_bloc/variant_bloc.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/product_details/widget/detail_widget.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/product_details/widget/image_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +22,6 @@ class ProductDetailsScreen extends StatelessWidget {
 
   final PageController _pageController = PageController();
   final ValueNotifier<bool> isFavorite = ValueNotifier(false);
-
 
   Future<void> checkFavoriteStatus() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -83,7 +82,6 @@ class ProductDetailsScreen extends StatelessWidget {
       ],
 
       child: Scaffold(
-   
         appBar: AppBar(
           backgroundColor: AppColors.productCard,
           actions: [
@@ -93,8 +91,6 @@ class ProductDetailsScreen extends StatelessWidget {
                 return IconButton(
                   onPressed: () async {
                     await toggleFavorite();
-
-                   
                   },
                   icon: Icon(
                     value ? Icons.favorite : Icons.favorite_border,
@@ -135,8 +131,8 @@ class ProductDetailsScreen extends StatelessWidget {
                           currentPage: imageState.currentPage,
                           onPageChanged: (i) {
                             context.read<ImageIndicatorBloc>().add(
-                                  ImageIndicatorEvent(i),
-                                );
+                              ImageIndicatorEvent(i),
+                            );
                           },
                           controller: _pageController,
                         ),
@@ -160,11 +156,11 @@ class ProductDetailsScreen extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               context.read<VariantBloc>().add(
-                                    VariantEvent(index),
-                                  );
+                                VariantEvent(index),
+                              );
                               context.read<ImageIndicatorBloc>().add(
-                                    ImageIndicatorEvent(0),
-                                  );
+                                ImageIndicatorEvent(0),
+                              );
                               _pageController.jumpToPage(0);
                             },
                             child: Container(
@@ -172,7 +168,7 @@ class ProductDetailsScreen extends StatelessWidget {
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                
+
                                 border: Border.all(
                                   color: variantState.selecedvarient == index
                                       ? AppColors.categoryTitle
@@ -202,8 +198,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       Row(
                         children: List.generate(variants.length, (index) {
-                          final size = variants[index]["selectedOptions"]
-                                  ?["attr_size_fashion"] ??
+                          final size =
+                              variants[index]["selectedOptions"]?["attr_size_fashion"] ??
                               "";
 
                           if (size.isEmpty) return SizedBox();
@@ -214,8 +210,8 @@ class ProductDetailsScreen extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               context.read<VariantBloc>().add(
-                                    VariantEvent(index),
-                                  );
+                                VariantEvent(index),
+                              );
                             },
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
@@ -224,16 +220,18 @@ class ProductDetailsScreen extends StatelessWidget {
                                 vertical: 8,
                               ),
                               decoration: BoxDecoration(
-                                color:
-                                    isSelected ? AppColors.categoryTitle : Colors.white,
+                                color: isSelected
+                                    ? AppColors.categoryTitle
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: AppColors.grey),
                               ),
                               child: Text(
                                 size,
                                 style: TextStyle(
-                                  color:
-                                      isSelected ? AppColors.white : AppColors.blackColor,
+                                  color: isSelected
+                                      ? AppColors.white
+                                      : AppColors.blackColor,
                                 ),
                               ),
                             ),
@@ -249,14 +247,12 @@ class ProductDetailsScreen extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                  
                       DetailCustome.productName(
                         productData["productName"] ?? "Unnamed",
                       ),
 
                       const SizedBox(height: 20),
 
-                   
                       DetailCustome.priseDetails(
                         price.toString(),
                         regularPrise.toString(),
@@ -294,16 +290,17 @@ class ProductDetailsScreen extends StatelessWidget {
                   children: [
                     DetailCustome.priceText(price.toString()),
                     Spacer(),
-                    DetailCustome.addtocartButton ( 
-
-                      onPressed: ()async{
-                          final selectedVariant =
-        context.read<VariantBloc>().state.selecedvarient;
-   await addToCart(selectedVariant);
-     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Added to Cart")),
-    );
-                      }
+                    DetailCustome.addtocartButton(
+                      onPressed: () async {
+                        final selectedVariant = context
+                            .read<VariantBloc>()
+                            .state
+                            .selecedvarient;
+                        await addToCart(selectedVariant);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Added to Cart")),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -312,37 +309,36 @@ class ProductDetailsScreen extends StatelessWidget {
           },
         ),
       ),
-      
     );
   }
-  Future<void> addToCart(int selectedVariant) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
 
-  final cartRef = FirebaseFirestore.instance
-      .collection("cart")
-      .doc(userId)
-      .collection("items")
-      .doc(productId);
+  Future<void> addToCart(int selectedVariant) async {  
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-  final doc = await cartRef.get();
-  final variant = productData["variants"][selectedVariant];
+    final cartRef = FirebaseFirestore.instance
+        .collection("cart")
+        .doc(userId)
+        .collection("items")
+        .doc(productId);
 
-  if (doc.exists) {
-    // Already in cart → increase qty
-    await cartRef.update({"qty": FieldValue.increment(1)});
-  } else {
-    // Add new product
-    await cartRef.set({
-      "id": productId,
-      "productName": productData["productName"],
-      "price": variant["price"],
-      "regularPrice": variant["regularPrise"],
-      "images": variant["images"],
-      "qty": 1,
-      "selectedVariantIndex": selectedVariant,
-      "createdAt": FieldValue.serverTimestamp(),
-    });
+    final doc = await cartRef.get();
+    final variant = productData["variants"][selectedVariant];
+
+    if (doc.exists) {
+      // Already in cart → increase qty
+      await cartRef.update({"qty": FieldValue.increment(1)});
+    } else {
+      // Add new product
+      await cartRef.set({
+        "id": productId,
+        "productName": productData["productName"],
+        "price": variant["price"],
+        "regularPrice": variant["regularPrise"],
+        "images": variant["images"],
+        "qty": 1,
+        "selectedVariantIndex": selectedVariant,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+    }
   }
-}
-
 }

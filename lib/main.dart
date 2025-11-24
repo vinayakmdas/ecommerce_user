@@ -2,7 +2,7 @@ import 'package:ecommerce_fasion/core/splashscreen/presentation/screen/splash.da
 import 'package:ecommerce_fasion/features/auth/presentation/screen/loginScreen.dart';
 import 'package:ecommerce_fasion/features/auth/presentation/screen/signup_screen.dart';
 import 'package:ecommerce_fasion/features/home/presentation/screens/homescreen.dart';
-import 'package:ecommerce_fasion/features/navigation/presentaion/screen/navigator.dart';
+import 'package:ecommerce_fasion/core/navigation/presentaion/screen/navigator.dart';
 import 'package:ecommerce_fasion/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
