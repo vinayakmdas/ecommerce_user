@@ -1,5 +1,5 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/favorites/widget/favorites_custome.dart';
+import 'package:ecommerce_fasion/features/favorites/presentaion/widget/favorites_custome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
-import 'package:ecommerce_fasion/features/auth/presentation/signup/model/signUp_Model.dart';
-import 'package:ecommerce_fasion/features/auth/presentation/signup/widget/singUpwidget.dart';
+import 'package:ecommerce_fasion/features/auth/data/model/signUp_Model.dart';
+import 'package:ecommerce_fasion/features/auth/presentation/widget/singUpwidget.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 

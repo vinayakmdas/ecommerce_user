@@ -1,6 +1,6 @@
-import 'package:ecommerce_fasion/features/home/widget/carousel_widget.dart';
-import 'package:ecommerce_fasion/features/home/widget/productGrid.dart';
-import 'package:ecommerce_fasion/features/home/widget/shop_category.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/carousel_widget.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/productGrid.dart';
+import 'package:ecommerce_fasion/features/home/presentation/widget/shop_category.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {

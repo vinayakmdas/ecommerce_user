@@ -1,8 +1,8 @@
-import 'package:ecommerce_fasion/features/auth/presentation/loginScreen/screens/loginScreen.dart';
-import 'package:ecommerce_fasion/features/auth/presentation/signup/screens/signup_screen.dart';
-import 'package:ecommerce_fasion/features/home/presentaion/homescreen.dart';
-import 'package:ecommerce_fasion/features/navigation/presentaion/navigator.dart';
-import 'package:ecommerce_fasion/features/splash/splash.dart';
+import 'package:ecommerce_fasion/core/splashscreen/presentation/screen/splash.dart';
+import 'package:ecommerce_fasion/features/auth/presentation/screen/loginScreen.dart';
+import 'package:ecommerce_fasion/features/auth/presentation/screen/signup_screen.dart';
+import 'package:ecommerce_fasion/features/home/presentation/screens/homescreen.dart';
+import 'package:ecommerce_fasion/features/navigation/presentaion/screen/navigator.dart';
 import 'package:ecommerce_fasion/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 

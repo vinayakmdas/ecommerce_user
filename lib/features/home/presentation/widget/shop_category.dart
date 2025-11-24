@@ -1,4 +1,4 @@
-import 'package:ecommerce_fasion/features/category/presentaion/category_scren.dart';
+import 'package:ecommerce_fasion/features/category/presentaion/screens/category_scren.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

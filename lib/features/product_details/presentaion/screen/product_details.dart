@@ -1,8 +1,8 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/product_details/bloc/imageIndicator/image_indicator_bloc.dart';
-import 'package:ecommerce_fasion/features/product_details/bloc/variant_bloc/variant_bloc.dart';
-import 'package:ecommerce_fasion/features/product_details/widget/detail_widget.dart';
-import 'package:ecommerce_fasion/features/product_details/widget/image_container.dart';
+import 'package:ecommerce_fasion/features/product_details/presentaion/bloc/imageIndicator/image_indicator_bloc.dart';
+import 'package:ecommerce_fasion/features/product_details/presentaion/bloc/variant_bloc/variant_bloc.dart';
+import 'package:ecommerce_fasion/features/product_details/presentaion/widget/detail_widget.dart';
+import 'package:ecommerce_fasion/features/product_details/presentaion/widget/image_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

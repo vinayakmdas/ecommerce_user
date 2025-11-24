@@ -1,6 +1,6 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
-import 'package:ecommerce_fasion/features/cart/checkOut/presentation/checkout_screen.dart';
-import 'package:ecommerce_fasion/features/cart/save_later/presentation/save_later.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/screen/checkout_screen.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/screen/save_later.dart';
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
