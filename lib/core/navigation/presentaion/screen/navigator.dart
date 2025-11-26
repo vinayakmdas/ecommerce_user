@@ -5,6 +5,7 @@ import 'package:ecommerce_fasion/features/cart/presentaion/screen/cart_screen.da
 import 'package:ecommerce_fasion/features/favorites/presentaion/screen/favorite_screen.dart';
 import 'package:ecommerce_fasion/features/home/presentation/screens/homescreen.dart';
 import 'package:ecommerce_fasion/core/navigation/presentaion/bloc/imageIndex/select_index_bloc.dart';
+import 'package:ecommerce_fasion/features/profile/presentation/screens/profile_main_screen.dart';
 import 'package:ecommerce_fasion/features/search/presentation/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,8 +32,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     HomeScreen(),
     Searchscreen(),
     FavoriteScreen(),
-  CartScreen(),
-    HomeScreen(),
+    CartScreen(),
+    ProfileMainScreen(),
   ];
 
   @override

@@ -53,4 +53,21 @@ class AppColors {
   // ^full GREY
   static Color grey = Colors.grey;
   static const Color white = Color(0xFFFFFFFF);
+
+  //^circle avatar  baground color
+  static const Color circleavatarBaground = Color(0XFF326d73);
+  static const Color circleBordercolor = Color(0XFF729aa2);
+
+  //^Action  avatar  icon color
+  static const Color adressIcon = Color(0XFFd27b83);
+  static const Color paymentIcon = Color(0XFF688ebb);
+  static const Color orderIcon = Color(0XFFd08983);
+  static const Color settingsIcon = Colors.grey  ;
+
+  //^Action  avatar  icon  baground color
+
+  static const Color adressbaground = Color(0XFFfee9e8);
+  static const Color paymentbaground = Color(0XFFecf2ff);
+  static const Color orderbaground = Color(0XFFfef4eb);
+  static const Color settingbaground = Color(0XFFe8fff0);
 }
