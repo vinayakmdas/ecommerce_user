@@ -1,3 +1,4 @@
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/widget/profileHeader.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/widget/profile_Body.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ class ProfileMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.scafoldBaground,
       body: Column(
         children: [
           SizedBox(

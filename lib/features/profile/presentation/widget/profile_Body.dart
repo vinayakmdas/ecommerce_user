@@ -1,11 +1,16 @@
 
+import 'package:ecommerce_fasion/features/profile/data/service/profile_service.dart';
+import 'package:ecommerce_fasion/features/profile/presentation/bloc/personoBloc/personol_bloc_bloc.dart';
+import 'package:ecommerce_fasion/features/profile/presentation/bloc/personoBloc/personol_bloc_event.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/adres%20_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/payment_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/personol_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/settingsScreen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/wishlist.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileBody {
   static Widget buildBody(BuildContext context) {
@@ -144,11 +149,18 @@ static Widget buildAccountList(BuildContext context) {
         background: AppColors.paymentbaground,
         iconColor: AppColors.paymentIcon,
         onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => BlocProvider(
+        create: (_) => PersonolBloc(ProfileService())
+          ..add(LoadPersonolData(FirebaseAuth.instance.currentUser!.uid)),
+        child: const PersonolScreen(),
+      ),
+    ),
+  );
+}
 
-            Navigator.push(context, MaterialPageRoute(
-            builder: (_) => PersonolScreen(),
-          ));
-        },
       ),
 
       _buildSettingTile(
