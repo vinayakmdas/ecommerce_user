@@ -22,10 +22,7 @@ class AddressRepositoryImpl extends AddressRepository {
     final city = p?.locality ?? p?.subLocality ?? '';
 
     final district =
-        (p?.subAdministrativeArea != null &&
-                p!.subAdministrativeArea!.isNotEmpty)
-            ? p.subAdministrativeArea!
-            : city;
+        p?.subAdministrativeArea ?? '';
 
     final street =
         '${p?.street ?? ''}, ${p?.subLocality ?? ''}'.trim();

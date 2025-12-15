@@ -1,5 +1,7 @@
 // lib/features/address/presentation/pages/add_address_page.dart
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -139,7 +141,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                                    ), 
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Save address
+                      _saveAddressToFirestore();
                     }
                   },
                   child: const Text('Save Address',style: TextStyle(color: AppColors.white),),
@@ -151,6 +153,40 @@ class _AddAddressPageState extends State<AddAddressPage> {
       ),
     );
   }
+Future<void> _saveAddressToFirestore() async {
+  
+  try {
+    
+     final uid = FirebaseAuth.instance.currentUser!.uid;
+
+await FirebaseFirestore.instance
+    .collection('user')
+    .doc(uid)
+    .collection('addresses')
+    .add({
+  "fullName": fullNameController.text,
+  "phone": phoneController.text,
+  "door": doorController.text,
+  "street": streetController.text,
+  "city": cityController.text,
+  "district": districtController.text,
+  "state": stateController.text,
+  "pincode": pincodeController.text,
+  "createdAt": FieldValue.serverTimestamp(),
+});
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Address saved successfully")),
+    );
+
+    Navigator.pop(context);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error: $e")),
+    );
+  }
+}
 
   Widget _buildLoader() {
     return BlocBuilder<AddressBloc, AddressState>(
