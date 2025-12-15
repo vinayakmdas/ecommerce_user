@@ -209,26 +209,75 @@ InkWell(
     }
 
     return Container(
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(color: Colors.black12, blurRadius: 8),
-      ]),
+  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(18),
+    gradient: LinearGradient(
+      colors: [
+        AppColors.container,       // light creamy tone
+        AppColors.productCards,    // white blend
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: AppColors.grey.withOpacity(0.4),
+        blurRadius: 12,
+        offset: Offset(0, 6),
+      ),
+    ],
+  ),
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Total: ₹ $total",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            "Total",
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.lessImportandText,
+            ),
           ),
+          SizedBox(height: 4),
+          Text(
+            "₹ $total",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppColors.tittle,
+            ),
+          ),
+        ],
+      ),
 
-          ElevatedButton(
-            onPressed: () {},
-            child: Text("Checkout"),
-          )
-            ],
-          )
-    );
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.buyNow,
+          padding: EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          elevation: 6,
+          shadowColor: AppColors.buyNow.withOpacity(0.6),
+        ),
+        onPressed: () {},
+        child: Text(
+          "Checkout",
+          style: TextStyle(
+            color: AppColors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  ),
+);
+
         }
 
          

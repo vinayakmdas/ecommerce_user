@@ -1,8 +1,10 @@
 
+
+
 import 'package:ecommerce_fasion/features/profile/data/service/profile_service.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/bloc/personoBloc/personol_bloc_bloc.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/bloc/personoBloc/personol_bloc_event.dart';
-import 'package:ecommerce_fasion/features/profile/presentation/screens/adres%20_screen.dart';
+import 'package:ecommerce_fasion/features/profile/presentation/screens/adress%20_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/payment_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/personol_screen.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/settingsScreen.dart';
@@ -40,7 +42,7 @@ class ProfileBody {
                 InkWell( 
                   
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> AdressScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> AddressPage()));
                   },
                    child: _quickAction(Icons.location_on_outlined, "Addresses", AppColors.adressbaground, AppColors.adressIcon )),
 
@@ -171,8 +173,9 @@ static Widget buildAccountList(BuildContext context) {
         iconColor: AppColors.adressIcon,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(
-            builder: (_) => AdressScreen(),
+            builder: (_) => AddressPage(),
           ));
+
         },
       ),
 
