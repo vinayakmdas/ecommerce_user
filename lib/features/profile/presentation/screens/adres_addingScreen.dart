@@ -85,6 +85,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
       appBar: AppBar(
         title: const Text('Add Address'),
         backgroundColor: AppColors.categoryTitle,
+        foregroundColor: AppColors.white,
       ),
       body: BlocProvider.value(
         value: addressBloc,
