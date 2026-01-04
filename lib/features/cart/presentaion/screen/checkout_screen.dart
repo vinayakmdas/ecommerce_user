@@ -1,24 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_fasion/core/navigation/constants/app_Navigator.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/address_selection/address_selection_bloc.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/address_selection/address_selection_event.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/address_selection/address_selection_state.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_bloc.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_event.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_state.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/widget/checkout_Widget.dart';
+import 'package:ecommerce_fasion/features/payment/presentation/screens/RazorpayScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 class CheckoutScreens extends StatelessWidget {
-  const CheckoutScreens({super.key});
+  final int amount;
+  const CheckoutScreens({super.key, required this.amount});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
 
-    return BlocProvider(
-      create: (_) => AddressSelectionBloc(),
+    return MultiBlocProvider(
+      providers : [
+        BlocProvider(create: (_) => AddressSelectionBloc()),
+    BlocProvider(create: (_) => PaymentMethodBloc()),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.scafoldBaground,
         appBar: AppBar(
@@ -57,14 +64,14 @@ class CheckoutScreens extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// CONTACT INFO
+           
                   CheckoutWidget.contactText(),
                   const SizedBox(height: 12),
                   CheckoutWidget.emailcontroller(emailController),
 
                   const SizedBox(height: 30),
 
-                  /// ADDRESS HEADER
+             
                   Row(
                     children: [
                       CheckoutWidget.savedAdressText(),
@@ -75,18 +82,17 @@ class CheckoutScreens extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// ADDRESS LIST
+              
                   Expanded(
-                    child: BlocBuilder<AddressSelectionBloc,
-                        AddressSelectionState>(
+                    child: BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
                       builder: (context, state) {
                         return ListView.separated(
                           itemCount: addresses.length,
                           separatorBuilder: (_, __) =>
                               const SizedBox(height: 16),
                           itemBuilder: (context, index) {
-                            final data = addresses[index].data()
-                                as Map<String, dynamic>;
+                            final data =
+                                addresses[index].data() as Map<String, dynamic>;
                             final docId = addresses[index].id;
 
                             final bool isSelected =
@@ -102,8 +108,8 @@ class CheckoutScreens extends StatelessWidget {
                                   "${data['district']}, ${data['state']} - ${data['pincode']}",
                               onTap: () {
                                 context.read<AddressSelectionBloc>().add(
-                                      SelectAddressEvent(docId),
-                                    );
+                                  SelectAddressEvent(docId),
+                                );
                               },
                               onEdit: () {
                                 // TODO: Navigate to edit address screen
@@ -111,8 +117,7 @@ class CheckoutScreens extends StatelessWidget {
                               onDelete: () async {
                                 await FirebaseFirestore.instance
                                     .collection('user')
-                                    .doc(FirebaseAuth
-                                        .instance.currentUser!.uid)
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
                                     .collection('addresses')
                                     .doc(docId)
                                     .delete();
@@ -123,6 +128,97 @@ class CheckoutScreens extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+Text(
+  "Payment Method",
+  style: TextStyle(
+    fontSize: 23,
+    fontWeight: FontWeight.w600,
+    color: AppColors.blackColor,
+  ),
+),
+
+const SizedBox(height: 16),
+
+BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+  builder: (context, paymentState) {
+    return Column(
+      children: [
+        CheckoutWidget.paymentMethodCard(
+          title: "Cash on Delivery",
+          isSelected: paymentState.selectedMethod == "COD",
+          onTap: () {
+            context
+                .read<PaymentMethodBloc>()
+                .add(SelectPaymentMethod("COD"));
+          },
+        ),
+        const SizedBox(height: 12),
+        CheckoutWidget.paymentMethodCard(
+          title: "UPI / Online Payment",
+          isSelected: paymentState.selectedMethod == "UPI",
+          onTap: () {
+            context
+                .read<PaymentMethodBloc>()
+                .add(SelectPaymentMethod("UPI"));
+          },
+        ),
+      ],
+    );
+  },
+),
+const SizedBox(height: 30),
+
+BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
+  builder: (context, addressState) {
+    return BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+      builder: (context, paymentState) {
+        final bool canProceed =
+            addressState.selectedAddressId != null &&
+            paymentState.selectedMethod != null;
+
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: canProceed
+                  ? AppColors.categoryTitle
+                  : Colors.grey,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            onPressed: canProceed
+                ? () {
+                    if (paymentState.selectedMethod == "COD") {
+                      // COD FLOW (later order placing)
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Order placed with COD"),
+                        ),
+                      );
+                    } else {
+                      // UPI → Razorpay Page
+                     AppNavigator.push(
+    context,
+    RazorpayScreen(
+      email:  emailController.text,
+      amount: amount,
+    ),
+  );
+                    }
+                  }
+                : null,
+            child: const Text(
+              "Next",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ),
+        );
+      },
+    );
+  },
+),
+
                 ],
               ),
             );

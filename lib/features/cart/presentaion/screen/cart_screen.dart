@@ -223,12 +223,15 @@ class CartScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-            onPressed: () {
-              AppNavigator.push(
-                context,
-                const CheckoutScreens(),
-              );
-            },
+           onPressed: () {
+  AppNavigator.push(
+    context,
+    CheckoutScreens(
+      amount: total.toInt(),
+    ),
+  );
+},
+
             child: const Text(
               "Checkout",
               style: TextStyle(

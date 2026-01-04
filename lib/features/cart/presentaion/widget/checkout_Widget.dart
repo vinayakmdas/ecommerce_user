@@ -217,5 +217,47 @@ class CheckoutWidget {
 
 
 
+
+static Widget paymentMethodCard({
+  required String title,
+  required bool isSelected,
+  required VoidCallback onTap,
+}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.categoryTitle
+              : Colors.grey.shade300,
+        ),
+        color: isSelected ? Colors.orange.shade50 : Colors.white,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isSelected
+                ? Icons.radio_button_checked
+                : Icons.radio_button_off,
+            color: AppColors.categoryTitle,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
  
 }
