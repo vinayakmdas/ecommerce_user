@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_fasion/core/constants/razorpay_keys.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_error_screen.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_sucess_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/constants/razorpay_keys.dart';
 
 class RazorpayScreen extends StatefulWidget {
   final int amount;
@@ -24,19 +24,18 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
   late Razorpay _razorpay;
 
   @override
-  @override
-void initState() {
-  super.initState();
-  _razorpay = Razorpay();
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
 
-  _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-  _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-  _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _openCheckout();
-  });
-}
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _openCheckout();
+    });
+  }
 
   void _openCheckout() {
     var options = {
@@ -45,53 +44,75 @@ void initState() {
       'name': 'Ecommerce Fashion',
       'description': 'Order Payment',
       'prefill': {
-        'email': "vinayakmdaz@gmail.com",
+        'email': widget.email,
         'contact': '8848561548',
       },
-      'theme': {
-        'color': '#000000',
-      }
+      'theme': {'color': '#000000'}
     };
 
     _razorpay.open(options);
   }
 
-void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
+  Future<String> getUsername() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final doc = await FirebaseFirestore.instance
+          .collection("user")
+          .doc(uid)
+          .get();
 
-  await FirebaseFirestore.instance
-      .collection("orders")
-      .doc(uid)
-      .collection("items")
-      .add({
-    "paymentId": response.paymentId,
-    "amount": widget.amount,
-    "status": "success",
-    "createdAt": Timestamp.now(),
-  });
+      if (doc.exists) {
+        return doc['username'] ?? 'Unknown User';
+      }
+      return 'Unknown User';
+    } catch (e) {
+      print(e);
+      return 'Unknown User';
+    }
+  }
 
-  if (!mounted) return;
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const PaymentSucessScreen(),
-    ),
-  );
-}
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(uid)
+        .collection("items")
+        .add({
+      "paymentId": response.paymentId,
+      "amount": widget.amount,
+      "status": "success",
+      "createdAt": Timestamp.now(),
+    });
 
-void _handlePaymentError(PaymentFailureResponse response) {
-  print("this is error starting message");
-  if (!mounted) return;
+    if (!mounted) return;
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const PaymentErrorScreen(),
-    ),
-  );
-}
+    final username = await getUsername();
 
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PaymentSucessScreen(
+          amount: widget.amount.toString(),
+          receiptName: username,
+          transferId: response.paymentId ?? '',
+          dataTime: DateTime.now().toString(),
+          paymetMethod: "Razorpay",
+        ),
+      ),
+    );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const PaymentErrorScreen(),
+      ),
+    );
+  }
 
   void _handleExternalWallet(ExternalWalletResponse response) {}
 
@@ -104,11 +125,11 @@ void _handlePaymentError(PaymentFailureResponse response) {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async=>false,
+      onWillPop: () async => false,
       child: const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: Center(child: CircularProgressIndicator(
+     
+        )),
       ),
     );
   }

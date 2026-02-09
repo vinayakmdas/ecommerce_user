@@ -70,4 +70,9 @@ class AppColors {
   static const Color paymentbaground = Color(0XFFecf2ff);
   static const Color orderbaground = Color(0XFFfef4eb);
   static const Color settingbaground = Color(0XFFe8fff0);
-}
+// ^ paymet colors
+  static const Color paymenticonlogoBaground =  Color(0xFFE7FDEE);
+  static const Color green  =Colors.green;
+  static const Color firstButtonColor =   Color(0xFF13EC5B);
+
+} 

@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/Splash',
         builder: (context, state) => const SplashAnimationScreen(),
+
       ),
       GoRoute(
         path: '/bottomnScreen',
