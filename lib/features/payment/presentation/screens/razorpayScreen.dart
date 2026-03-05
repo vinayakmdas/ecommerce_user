@@ -71,37 +71,76 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final firestore = FirebaseFirestore.instance;
 
-    await FirebaseFirestore.instance
-        .collection("orders")
-        .doc(uid)
-        .collection("items")
-        .add({
-      "paymentId": response.paymentId,
-      "amount": widget.amount,
-      "status": "success",
-      "createdAt": Timestamp.now(),
+  // 1️⃣ Get Cart Items
+  final cartSnapshot = await firestore
+      .collection("cart")
+      .doc(uid)
+      .collection("items")
+      .get();
+
+  final cartItems = cartSnapshot.docs;
+
+  if (cartItems.isEmpty) return;
+
+  // 2️⃣ Create Order Document
+  final orderRef = firestore.collection("orders").doc();
+
+  await orderRef.set({
+    "userId": uid,
+    "amount": widget.amount,
+    "paymentId": response.paymentId,
+    "status": "success",
+    "createdAt": Timestamp.now(),
+  });
+
+  // 3️⃣ Add Items inside order/items
+  for (var item in cartItems) {
+    final data = item.data();
+
+    await orderRef.collection("items").add({
+      "productId": item.id,
+      "productName": data["productName"],
+      "price": data["price"],
+      "qty": data["qty"],
+      "sellerId": data["sellerId"],
+      "image": data["images"][0],
+      "status": "pending",
     });
-
-    if (!mounted) return;
-
-    final username = await getUsername();
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PaymentSucessScreen(
-          amount: widget.amount.toString(),
-          receiptName: username,
-          transferId: response.paymentId ?? '',
-          dataTime: DateTime.now().toString(),
-          paymetMethod: "Razorpay",
-        ),
-      ),
-    );
   }
+
+  // 4️⃣ Clear Cart
+  for (var item in cartItems) {
+    await item.reference.delete();
+  }
+
+  if (!mounted) return;
+
+  final username = await getUsername();
+
+  Navigator.pushReplacement(
+    
+    context,
+    MaterialPageRoute(
+      
+      builder: (_) => PaymentSucessScreen(
+        
+        amount: widget.amount.toString(),
+        receiptName: username,
+        transferId: response.paymentId ?? '',
+        dataTime: DateTime.now().toString(),
+        paymetMethod: "Razorpay",
+      ),
+      
+    ),
+    
+  );
+  print("work");
+  
+}
 
   void _handlePaymentError(PaymentFailureResponse response) {
     if (!mounted) return;
