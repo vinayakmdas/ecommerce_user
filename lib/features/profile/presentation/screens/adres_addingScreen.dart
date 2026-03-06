@@ -15,7 +15,7 @@ import 'package:ecommerce_fasion/features/profile/presentation/widget/adress_add
 import '../../data/repositories/address_repository_impl.dart';
 
 class AddAddressPage extends StatefulWidget {
-  const AddAddressPage({Key? key}) : super(key: key);
+  const AddAddressPage({super.key});
 
   @override
   State<AddAddressPage> createState() => _AddAddressPageState();

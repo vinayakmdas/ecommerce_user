@@ -145,13 +145,13 @@ return  Row(
 }
   // ^login Custom TextFormField for Password
 static Widget passwordcontroller(TextEditingController controller) {
-  bool _isPasswordVisible = false;
+  bool isPasswordVisible = false;
 
   return StatefulBuilder(
     builder: (context, setState) {
       return TextFormField(
         controller: controller,
-        obscureText: !_isPasswordVisible,
+        obscureText: !isPasswordVisible,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -169,14 +169,14 @@ static Widget passwordcontroller(TextEditingController controller) {
           prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible
+              isPasswordVisible
                   ? Icons.visibility
                   : Icons.visibility_off,
               color: Colors.grey,
             ),
             onPressed: () {
               setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
+                isPasswordVisible = !isPasswordVisible;
               });
             },
           ),
@@ -217,13 +217,13 @@ static Widget conformpassword(
   
   TextEditingController confirmController,
 ) {
-  bool _isPasswordVisible = false;
+  bool isPasswordVisible = false;
 
   return StatefulBuilder(
     builder: (context, setState) {
       return TextFormField(
         controller: confirmController,
-        obscureText: !_isPasswordVisible,
+        obscureText: !isPasswordVisible,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -236,14 +236,14 @@ static Widget conformpassword(
           hintStyle: const TextStyle(color: Colors.grey),
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible
+              isPasswordVisible
                   ? Icons.visibility
                   : Icons.visibility_off,
               color: Colors.grey,
             ),
             onPressed: () {
               setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
+                isPasswordVisible = !isPasswordVisible;
               });
             },
           ),

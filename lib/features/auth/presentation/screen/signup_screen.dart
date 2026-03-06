@@ -16,14 +16,14 @@ class SignupScreen extends StatelessWidget {
 
 
     SignupModel signupModel =SignupModel();
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: AppColors.scafoldBaground,
       body: Padding(
         padding: const EdgeInsets.only(top: 234, left: 25, right: 25),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 Signupwidget.appwelcomeText(),
@@ -59,7 +59,7 @@ class SignupScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: ()async {
 
-                      if(_formKey.currentState!.validate()){
+                      if(formKey.currentState!.validate()){
                       if(passwordcontroller.text== confirmpasswordcontroller.text){
                        await signupModel.signup(
                         context: context,

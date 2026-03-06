@@ -6,7 +6,7 @@ class SizeSelector extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onSelect;
 
-  const SizeSelector({
+  const SizeSelector({super.key, 
     required this.variants,
     required this.selectedIndex,
     required this.onSelect,

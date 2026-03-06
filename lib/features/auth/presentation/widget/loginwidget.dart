@@ -127,13 +127,13 @@ return  Row(
 }
   // ^login Custom TextFormField for Password
 static Widget loginPassword(TextEditingController controller) {
-  bool _isPasswordVisible = false;
+  bool isPasswordVisible = false;
 
   return StatefulBuilder(
     builder: (context, setState) {
       return TextFormField(
         controller: controller,
-        obscureText: !_isPasswordVisible,
+        obscureText: !isPasswordVisible,
         autovalidateMode: AutovalidateMode.onUserInteraction, // ✅ validates live
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -155,14 +155,14 @@ static Widget loginPassword(TextEditingController controller) {
           prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible
+              isPasswordVisible
                   ? Icons.visibility
                   : Icons.visibility_off,
               color: Colors.grey,
             ),
             onPressed: () {
               setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
+                isPasswordVisible = !isPasswordVisible;
               });
             },
           ),

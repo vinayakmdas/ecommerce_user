@@ -67,6 +67,7 @@ class ProductDetailsScreen extends StatelessWidget {
         "price": firstVariant["price"] ?? 0,
         "regularPrice": firstVariant["regularPrise"] ?? 0,
         "createdAt": FieldValue.serverTimestamp(),
+        "sellerId": productData["sellerId"]
       });
 
       isFavorite.value = true;
@@ -337,6 +338,7 @@ class ProductDetailsScreen extends StatelessWidget {
         "images": variant["images"],
         "qty": 1,
         "selectedVariantIndex": selectedVariant,
+        "sellerId": productData["sellerId"],
         "createdAt": FieldValue.serverTimestamp(),
       });
     }

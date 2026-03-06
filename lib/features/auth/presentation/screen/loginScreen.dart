@@ -16,7 +16,7 @@ class Loginscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailcontroller = TextEditingController();
     final TextEditingController passwordcontroller = TextEditingController();
-    final _formkey = GlobalKey<FormState>();
+    final formkey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: 
     AppColors.scafoldBaground,
@@ -24,7 +24,7 @@ class Loginscreen extends StatelessWidget {
         padding: const EdgeInsets.only(top: 234,left: 25, right: 25),
         child: SingleChildScrollView(
           child: Form(
-            key: _formkey, 
+            key: formkey, 
             child: Column(
               children: [
               LoginWidgets.appwelcomeText(),
@@ -48,7 +48,7 @@ class Loginscreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async{
                     
-                 if(_formkey.currentState!.validate()){
+                 if(formkey.currentState!.validate()){
                   // Perform login action
 
                     //  log("${emailcontroller.text.toString()} and ${passwordcontroller.text.toString()}");

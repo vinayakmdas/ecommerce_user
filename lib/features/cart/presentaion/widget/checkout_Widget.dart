@@ -2,7 +2,6 @@ import 'package:ecommerce_fasion/core/navigation/constants/app_Navigator.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/profile/presentation/screens/adres_addingScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CheckoutWidget {
 

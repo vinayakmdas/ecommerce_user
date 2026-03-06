@@ -5,7 +5,7 @@ class ColorSelector extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onSelect;
 
-  const ColorSelector({
+  const ColorSelector({super.key, 
     required this.variants,
     required this.selectedIndex,
     required this.onSelect,

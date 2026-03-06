@@ -2,6 +2,8 @@ import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 
 class ProfileMiddleCards extends StatelessWidget {
+  const ProfileMiddleCards({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -88,7 +88,8 @@ void _handlePaymentSuccess(PaymentSuccessResponse response) async {
 
   // 2️⃣ Create Order Document
   final orderRef = firestore.collection("orders").doc();
-
+String displayOrderId =
+    "#ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
   await orderRef.set({
     "userId": uid,
     "amount": widget.amount,
@@ -102,6 +103,7 @@ void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     final data = item.data();
 
     await orderRef.collection("items").add({
+      "orderId" : displayOrderId,
       "productId": item.id,
       "productName": data["productName"],
       "price": data["price"],
