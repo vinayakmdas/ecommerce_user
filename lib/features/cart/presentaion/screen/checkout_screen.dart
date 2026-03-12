@@ -196,16 +196,28 @@ BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
                           content: Text("Order placed with COD"),
                         ),
                       );
-                    } else {
-                      // UPI → Razorpay Page
-                     AppNavigator.push(
+                    }
+                    else {
+  final selectedDoc = addresses.firstWhere(
+    (doc) => doc.id == addressState.selectedAddressId,
+  );
+
+  final data = selectedDoc.data() as Map<String, dynamic>;
+
+  final fullAddress =
+      "${data['door']}, ${data['street']}, ${data['city']}, "
+      "${data['district']}, ${data['state']} - ${data['pincode']}";
+
+  AppNavigator.push(
     context,
     RazorpayScreen(
-      email:  emailController.text,
+      email: emailController.text,
       amount: amount,
+      adress: fullAddress,
+    
     ),
   );
-                    }
+}
                   }
                 : null,
             child: const Text(

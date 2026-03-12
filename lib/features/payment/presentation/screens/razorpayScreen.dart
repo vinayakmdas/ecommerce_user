@@ -7,13 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayScreen extends StatefulWidget {
+
   final int amount;
   final String email;
+  final String adress;
 
   const RazorpayScreen({
     super.key,
+   
     required this.amount,
     required this.email,
+     required this.adress,
   });
 
   @override
@@ -35,6 +39,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _openCheckout();
     });
+    print(widget.adress);
   }
 
   void _openCheckout() {
@@ -105,6 +110,7 @@ String displayOrderId =
     final data = item.data();
 
     await orderRef.collection("items").add({
+      "adress" : widget.adress,
       "orderId" : displayOrderId,
       "productId": item.id,
       "productName": data["productName"],
@@ -113,7 +119,7 @@ String displayOrderId =
       "sellerId": data["sellerId"],
       "image": data["images"][0],
       "status": "pending",
-      "description" : data["description"]
+      
     });
   }
 
