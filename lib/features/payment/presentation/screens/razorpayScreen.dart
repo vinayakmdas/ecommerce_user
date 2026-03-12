@@ -86,6 +86,7 @@ void _handlePaymentSuccess(PaymentSuccessResponse response) async {
 
   if (cartItems.isEmpty) return;
 
+String sellerId = cartItems.first["sellerId"].toString();
   // 2️⃣ Create Order Document
   final orderRef = firestore.collection("orders").doc();
 String displayOrderId =
@@ -96,6 +97,7 @@ String displayOrderId =
     "paymentId": response.paymentId,
     "status": "success",
     "createdAt": Timestamp.now(),
+    "sellerId":  sellerId
   });
 
   // 3️⃣ Add Items inside order/items
@@ -111,6 +113,7 @@ String displayOrderId =
       "sellerId": data["sellerId"],
       "image": data["images"][0],
       "status": "pending",
+      "description" : data["description"]
     });
   }
 
