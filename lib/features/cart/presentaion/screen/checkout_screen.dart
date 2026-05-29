@@ -52,13 +52,11 @@ class CheckoutScreens extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text("No addresses added yet"));
-            }
-
+        
+           
+        
             final addresses = snapshot.data!.docs;
-
+        
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               child: Column(
@@ -68,9 +66,9 @@ class CheckoutScreens extends StatelessWidget {
                   CheckoutWidget.contactText(),
                   const SizedBox(height: 12),
                   CheckoutWidget.emailcontroller(emailController),
-
+        
                   const SizedBox(height: 30),
-
+        
              
                   Row(
                     children: [
@@ -79,9 +77,9 @@ class CheckoutScreens extends StatelessWidget {
                       CheckoutWidget.elevatebutton(context),
                     ],
                   ),
-
+        
                   const SizedBox(height: 20),
-
+        
               
                   Expanded(
                     child: BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
@@ -94,10 +92,10 @@ class CheckoutScreens extends StatelessWidget {
                             final data =
                                 addresses[index].data() as Map<String, dynamic>;
                             final docId = addresses[index].id;
-
+        
                             final bool isSelected =
                                 state.selectedAddressId == docId;
-
+        
                             return CheckoutWidget.buildAddressCard(
                               isSelected: isSelected,
                               label: "Address",
@@ -129,22 +127,22 @@ class CheckoutScreens extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-Text(
-  "Payment Method",
-  style: TextStyle(
-    fontSize: 23,
-    fontWeight: FontWeight.w600,
-    color: AppColors.blackColor,
-  ),
-),
-
-const SizedBox(height: 16),
-
-BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
-  builder: (context, paymentState) {
-    return Column(
-      children: [
+        
+        Text(
+          "Payment Method",
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+          ),
+        ),
+        
+        const SizedBox(height: 16),
+        
+        BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+          builder: (context, paymentState) {
+            return Column(
+              children: [
         CheckoutWidget.paymentMethodCard(
           title: "Cash on Delivery",
           isSelected: paymentState.selectedMethod == "COD",
@@ -164,20 +162,20 @@ BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
                 .add(SelectPaymentMethod("UPI"));
           },
         ),
-      ],
-    );
-  },
-),
-const SizedBox(height: 30),
-
-BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
-  builder: (context, addressState) {
-    return BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
-      builder: (context, paymentState) {
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 30),
+        
+        BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
+          builder: (context, addressState) {
+            return BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+              builder: (context, paymentState) {
         final bool canProceed =
             addressState.selectedAddressId != null &&
             paymentState.selectedMethod != null;
-
+        
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -198,26 +196,25 @@ BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
                       );
                     }
                     else {
-  final selectedDoc = addresses.firstWhere(
-    (doc) => doc.id == addressState.selectedAddressId,
-  );
-
-  final data = selectedDoc.data() as Map<String, dynamic>;
-
-  final fullAddress =
-      "${data['door']}, ${data['street']}, ${data['city']}, "
-      "${data['district']}, ${data['state']} - ${data['pincode']}";
-
-  AppNavigator.push(
-    context,
-    RazorpayScreen(
-      email: emailController.text,
-      amount: amount,
-      adress: fullAddress,
-    
-    ),
-  );
-}
+          final selectedDoc = addresses.firstWhere(
+            (doc) => doc.id == addressState.selectedAddressId,
+          );
+        
+          final data = selectedDoc.data() as Map<String, dynamic>;
+        
+          final fullAddress =
+              "${data['door']}, ${data['street']}, ${data['city']}, "
+              "${data['district']}, ${data['state']} - ${data['pincode']}";
+        
+          AppNavigator.push(
+            context,
+            RazorpayScreen(
+              email: emailController.text,
+              amount: amount,
+              adress: fullAddress, 
+            ),
+          );
+        }
                   }
                 : null,
             child: const Text(
@@ -226,11 +223,11 @@ BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
             ),
           ),
         );
-      },
-    );
-  },
-),
-
+              },
+            );
+          },
+        ),
+        
                 ],
               ),
             );

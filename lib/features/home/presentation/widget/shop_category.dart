@@ -53,12 +53,15 @@ class ShopCategory {
       'icon': FontAwesomeIcons.glasses,
       'gradient': [Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/13/17/5a/13175a7be14ce6bb9da92a4c0deac33e.jpg',
+      'categoryId' : 'jMCzId9h0BIzj6JGY56Q'
+
     },
     {
       'name': 'Watch',
       'icon': FontAwesomeIcons.clock,
       'gradient':[Color(0xFF30cfd0), AppColors.categoryTitle],
       'image': 'https://i.pinimg.com/1200x/44/0e/5e/440e5e07a537f3dbe5a466ce27c7e967.jpg',
+      'categoryId' : 'jMCzId9h0BIzj6JGY56Q'
     },
     ];
 
@@ -99,7 +102,7 @@ class ShopCategory {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Icon(item['icon'], color: Colors.white, size: 28),
+                    child: FaIcon(item['icon'], color: Colors.white, size: 28),
                   ),
                   SizedBox(height: 10),
                   Text(

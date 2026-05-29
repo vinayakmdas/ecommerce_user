@@ -223,6 +223,7 @@ class CartScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
+// checkout button 
            onPressed: () {
   AppNavigator.push(
     context,
