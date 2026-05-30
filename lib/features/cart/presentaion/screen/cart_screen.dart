@@ -44,109 +44,121 @@ class CartScreen extends StatelessWidget {
                     final data = cartItems[index];
                     final productId = data.id;
 
-                    return Card(
-                      color: AppColors.container,
-                      elevation: 3,
-                      shadowColor: Colors.black12,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    data["images"][0],
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
+                    return  TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.0, end: 1.0),
+    duration: Duration(milliseconds: 350 + (index * 80)),
+    curve: Curves.easeOut,
+    builder: (context, value, child) => Opacity(
+      opacity: value,
+      child: Transform.translate(
+        offset: Offset(0, 30 * (1 - value)),
+        child: child,
+      ),
+    ),
+                      child: Card(
+                        color: AppColors.container,
+                        elevation: 3,
+                        shadowColor: Colors.black12,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      data["images"][0],
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data["productName"],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: AppColors.errormessage,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          "₹ ${data["price"]}",
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.appBar,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        quantityButtons(
+                                          qty: data["qty"],
+                                          onIncrease: () =>
+                                              CartCustome.increaseQty(productId),
+                                          onDecrease: () =>
+                                              CartCustome.decreaseQty(productId),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: AppColors.errormessage,
+                                      size: 26,
+                                    ),
+                                    onPressed: () =>
+                                        CartCustome.removeItem(productId),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
+                              InkWell(
+                                onTap: () =>
+                                    CartCustome.saveForLater(productId),
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.categoryTitle,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      Icon(Icons.bookmark_border,
+                                          color: AppColors.white),
+                                      const SizedBox(width: 6),
                                       Text(
-                                        data["productName"],
+                                        "Save for Later",
                                         style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15,
-                                          color: AppColors.errormessage,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        "₹ ${data["price"]}",
-                                        style: TextStyle(
-                                          fontSize: 22,
+                                          color: AppColors.white,
                                           fontWeight: FontWeight.w600,
-                                          color: AppColors.appBar,
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      quantityButtons(
-                                        qty: data["qty"],
-                                        onIncrease: () =>
-                                            CartCustome.increaseQty(productId),
-                                        onDecrease: () =>
-                                            CartCustome.decreaseQty(productId),
                                       ),
                                     ],
                                   ),
                                 ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete_outline,
-                                    color: AppColors.errormessage,
-                                    size: 26,
-                                  ),
-                                  onPressed: () =>
-                                      CartCustome.removeItem(productId),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 14),
-                            InkWell(
-                              onTap: () =>
-                                  CartCustome.saveForLater(productId),
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                decoration: BoxDecoration(
-                                  color: AppColors.categoryTitle,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.bookmark_border,
-                                        color: AppColors.white),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      "Save for Later",
-                                      style: TextStyle(
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -162,24 +174,48 @@ class CartScreen extends StatelessWidget {
   }
 
   Widget quantityButtons({
-    required int qty,
-    required VoidCallback onIncrease,
-    required VoidCallback onDecrease,
-  }) {
-    return Row(
-      children: [
-        IconButton(
-            icon: const Icon(Icons.remove_circle_outline),
-            onPressed: onDecrease),
-        Text(qty.toString(),
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold)),
-        IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: onIncrease),
-      ],
-    );
-  }
+  required int qty,
+  required VoidCallback onIncrease,
+  required VoidCallback onDecrease,
+}) {
+  return Row(
+    children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.categoryTitle.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.categoryTitle.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Qty",
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.categoryTitle,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Container(width: 1, height: 14,
+                color: AppColors.categoryTitle.withOpacity(0.3)),
+            const SizedBox(width: 6),
+            Text(
+              qty.toString(),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: AppColors.categoryTitle,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
 
   Widget totalSection(BuildContext context, List cartItems) {
     num total = 0;
@@ -223,7 +259,6 @@ class CartScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-// checkout button 
            onPressed: () {
   AppNavigator.push(
     context,
