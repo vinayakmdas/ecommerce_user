@@ -2,16 +2,47 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class CartCustome {
-  static Future<void> increaseQty(String productID) async {
+  static Future<void> increaseQty(String cartItemId) async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
     final ref = FirebaseFirestore.instance
         .collection("cart")
         .doc(userId)
         .collection("items")
-        .doc(productID);
+        .doc(cartItemId);
 
-    await ref.update({"qty": FieldValue.increment(1)});
+    final doc = await ref.get();
+    if (doc.exists) {
+      final data = doc.data() as Map<String, dynamic>;
+      final int currentQty = data["qty"] ?? 0;
+      final String productId = data["id"] ?? "";
+      final int variantIndex = data["selectedVariantIndex"] ?? 0;
+
+      if (productId.isNotEmpty) {
+        final productDoc = await FirebaseFirestore.instance
+            .collection("products")
+            .doc(productId)
+            .get();
+
+        if (productDoc.exists) {
+          final productData = productDoc.data() as Map<String, dynamic>;
+          final List<dynamic> variants = productData["variants"] as List? ?? [];
+          if (variantIndex >= 0 && variantIndex < variants.length) {
+            final variant = variants[variantIndex] as Map? ?? {};
+            final int maxStock = (variant["quantity"] as int?) ?? 5;
+            if (currentQty < maxStock) {
+              await ref.update({"qty": FieldValue.increment(1)});
+            }
+          } else {
+            await ref.update({"qty": FieldValue.increment(1)});
+          }
+        } else {
+          await ref.update({"qty": FieldValue.increment(1)});
+        }
+      } else {
+        await ref.update({"qty": FieldValue.increment(1)});
+      }
+    }
   }
 
   static Future<void> decreaseQty(String productId) async {

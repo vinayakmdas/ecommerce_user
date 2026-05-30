@@ -8,7 +8,9 @@ import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/p
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_event.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_state.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/widget/checkout_Widget.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/widget/order_service.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/RazorpayScreen.dart';
+import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_sucess_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -186,35 +188,67 @@ class CheckoutScreens extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             onPressed: canProceed
-                ? () {
+                ? () async {
+                    final selectedDoc = addresses.firstWhere(
+                      (doc) => doc.id == addressState.selectedAddressId,
+                    );
+                  
+                    final data = selectedDoc.data() as Map<String, dynamic>;
+                  
+                    final fullAddress =
+                        "${data['door']}, ${data['street']}, ${data['city']}, "
+                        "${data['district']}, ${data['state']} - ${data['pincode']}";
+
                     if (paymentState.selectedMethod == "COD") {
-                      // COD FLOW (later order placing)
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Order placed with COD"),
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const Center(child: CircularProgressIndicator()),
+                      );
+
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      final userDoc = await FirebaseFirestore.instance
+                          .collection("user")
+                          .doc(uid)
+                          .get();
+                      final username = userDoc.exists ? (userDoc.data()?['username'] ?? 'Unknown User') : 'Unknown User';
+                      final email = emailController.text;
+                      final String customPaymentId = "COD-${DateTime.now().millisecondsSinceEpoch}";
+
+                      await OrderService.placeOrder(
+                        paymentId: customPaymentId,
+                        paymentMethod: "Cash on Delivery",
+                        totalAmount: amount,
+                        address: fullAddress,
+                        email: email,
+                      );
+
+                      if (context.mounted) {
+                        Navigator.pop(context); // Dismiss loading spinner
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PaymentSucessScreen(
+                              amount: amount.toString(),
+                              receiptName: username,
+                              transferId: customPaymentId,
+                              dataTime: DateTime.now().toString(),
+                              paymetMethod: "Cash on Delivery",
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    else {
+                      AppNavigator.push(
+                        context,
+                        RazorpayScreen(
+                          email: emailController.text,
+                          amount: amount,
+                          adress: fullAddress, 
                         ),
                       );
                     }
-                    else {
-          final selectedDoc = addresses.firstWhere(
-            (doc) => doc.id == addressState.selectedAddressId,
-          );
-        
-          final data = selectedDoc.data() as Map<String, dynamic>;
-        
-          final fullAddress =
-              "${data['door']}, ${data['street']}, ${data['city']}, "
-              "${data['district']}, ${data['state']} - ${data['pincode']}";
-        
-          AppNavigator.push(
-            context,
-            RazorpayScreen(
-              email: emailController.text,
-              amount: amount,
-              adress: fullAddress, 
-            ),
-          );
-        }
                   }
                 : null,
             child: const Text(

@@ -42,7 +42,7 @@ class CartScreen extends StatelessWidget {
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {
                     final data = cartItems[index];
-                    final productId = data.id;
+                    final cartItemId = data.id;
 
                     return  TweenAnimationBuilder<double>(
                       tween: Tween(begin: 0.0, end: 1.0),
@@ -62,7 +62,7 @@ class CartScreen extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -105,13 +105,56 @@ class CartScreen extends StatelessWidget {
                                             color: AppColors.appBar,
                                           ),
                                         ),
+                                        
+                                        // Display variant color & size if available
+                                        if (data.data().containsKey("color") || data.data().containsKey("size")) ...[
+                                          const SizedBox(height: 6),
+                                          Row(
+                                            children: [
+                                              if (data.data().containsKey("color") && data["color"].toString().isNotEmpty)
+                                                Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.categoryTitle.withOpacity(0.08),
+                                                    borderRadius: BorderRadius.circular(6),
+                                                  ),
+                                                  child: Text(
+                                                    "Color: ${data["color"].toString()[0].toUpperCase() + data["color"].toString().substring(1)}",
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: AppColors.categoryTitle,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              if (data.data().containsKey("color") && data["color"].toString().isNotEmpty && data.data().containsKey("size") && data["size"].toString().isNotEmpty)
+                                                const SizedBox(width: 8),
+                                              if (data.data().containsKey("size") && data["size"].toString().isNotEmpty)
+                                                Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.categoryTitle.withOpacity(0.08),
+                                                    borderRadius: BorderRadius.circular(6),
+                                                  ),
+                                                  child: Text(
+                                                    "Size: ${data["size"]}",
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: AppColors.categoryTitle,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ],
                                         const SizedBox(height: 10),
                                         quantityButtons(
                                           qty: data["qty"],
                                           onIncrease: () =>
-                                              CartCustome.increaseQty(productId),
+                                              CartCustome.increaseQty(cartItemId),
                                           onDecrease: () =>
-                                              CartCustome.decreaseQty(productId),
+                                              CartCustome.decreaseQty(cartItemId),
                                         ),
                                       ],
                                     ),
@@ -123,14 +166,14 @@ class CartScreen extends StatelessWidget {
                                       size: 26,
                                     ),
                                     onPressed: () =>
-                                        CartCustome.removeItem(productId),
+                                        CartCustome.removeItem(cartItemId),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 14),
                               InkWell(
                                 onTap: () =>
-                                    CartCustome.saveForLater(productId),
+                                    CartCustome.saveForLater(cartItemId),
                                 borderRadius: BorderRadius.circular(12),
                                 child: Container(
                                   width: double.infinity,
@@ -181,7 +224,6 @@ class CartScreen extends StatelessWidget {
   return Row(
     children: [
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: AppColors.categoryTitle.withOpacity(0.08),
           borderRadius: BorderRadius.circular(8),
@@ -190,25 +232,34 @@ class CartScreen extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Qty",
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.categoryTitle,
-                fontWeight: FontWeight.w600,
+            IconButton(
+              icon: const Icon(Icons.remove, size: 16),
+              color: AppColors.categoryTitle,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              onPressed: onDecrease,
+            ),
+            Container(width: 1, height: 16,
+                color: AppColors.categoryTitle.withOpacity(0.3)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                qty.toString(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.categoryTitle,
+                ),
               ),
             ),
-            const SizedBox(width: 6),
-            Container(width: 1, height: 14,
+            Container(width: 1, height: 16,
                 color: AppColors.categoryTitle.withOpacity(0.3)),
-            const SizedBox(width: 6),
-            Text(
-              qty.toString(),
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: AppColors.categoryTitle,
-              ),
+            IconButton(
+              icon: const Icon(Icons.add, size: 16),
+              color: AppColors.categoryTitle,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              onPressed: onIncrease,
             ),
           ],
         ),

@@ -3,17 +3,181 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 8, 24);
+    // ✅ Collection Group rule - ONLY for order items
+    match /{path=**}/items/{itemId} {
+      allow read: if request.auth != null
+        && (
+          resource.data.sellerId == request.auth.uid ||
+          request.auth.token.email == "admin@gmail.com" ||
+          // allow cart/favorites/saveForLater owners
+          resource.data.keys().hasAny(['sellerId']) == false
+        );
+
+      allow write: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // Admin
+    match /admin/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Categories
+    match /category/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // Attributes
+    match /attributes/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // CHAT ROOMS
+    match /chat_rooms/{chatId} {
+      allow create: if request.auth != null
+        && (
+          request.resource.data.adminId == request.auth.uid ||
+          request.resource.data.sellerId == request.auth.uid
+        );
+
+      allow read, update: if request.auth != null
+        && (
+          resource.data.adminId == request.auth.uid ||
+          resource.data.sellerId == request.auth.uid
+        );
+
+      match /messages/{messageId} {
+        allow create: if request.auth != null
+          && (
+            get(/databases/$(database)/documents/chat_rooms/$(chatId)).data.adminId == request.auth.uid ||
+            get(/databases/$(database)/documents/chat_rooms/$(chatId)).data.sellerId == request.auth.uid
+          );
+
+        allow read: if request.auth != null
+          && (
+            get(/databases/$(database)/documents/chat_rooms/$(chatId)).data.adminId == request.auth.uid ||
+            get(/databases/$(database)/documents/chat_rooms/$(chatId)).data.sellerId == request.auth.uid
+          );
+      }
+    }
+
+    // Brand
+    match /brand/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // Sellers
+    match /sellers/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, update: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // Users
+    match /user/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // FAVORITES
+    match /favorites/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+
+      match /items/{itemId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == userId;
+      }
+    }
+
+    // ADDRESSES
+    match /user/{userId}/addresses/{addressId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+    }
+
+    // CART
+    match /cart/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+
+      match /items/{itemId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == userId;
+      }
+    }
+
+    // ORDERS
+    match /orders/{orderId} {
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+
+      allow read: if request.auth != null
+        && (
+          resource.data.userId == request.auth.uid ||
+          resource.data.sellerId == request.auth.uid ||
+          request.auth.token.email == "admin@gmail.com"
+        );
+
+      allow update, delete: if request.auth != null
+        && request.auth.token.email == "admin@gmail.com";
+
+      match /items/{itemId} {
+        allow read: if request.auth != null
+          && (
+            get(/databases/$(database)/documents/orders/$(orderId)).data.userId == request.auth.uid ||
+            get(/databases/$(database)/documents/orders/$(orderId)).data.sellerId == request.auth.uid ||
+            request.auth.token.email == "admin@gmail.com" ||
+            resource.data.sellerId == request.auth.uid
+          );
+
+        allow write: if request.auth != null
+          && (
+            get(/databases/$(database)/documents/orders/$(orderId)).data.userId == request.auth.uid ||
+            request.auth.token.email == "admin@gmail.com"
+          );
+      }
+    }
+
+    // SAVE FOR LATER
+    match /SaveForLater/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+
+      match /items/{itemId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == userId;
+      }
+    }
+
+    // Products
+    match /products/{productId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && request.resource.data.sellerId == request.auth.uid;
+
+      allow update: if request.auth != null
+        && (
+          resource.data.sellerId == request.auth.uid ||
+          request.auth.token.email == "admin@gmail.com" ||
+          // Allow buyers to update ONLY the product variants' quantities (stock)
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['variants'])
+        );
+
+      allow delete: if request.auth != null
+        && (
+          resource.data.sellerId == request.auth.uid ||
+          request.auth.token.email == "admin@gmail.com"
+        );
     }
   }
 }

@@ -143,14 +143,19 @@ void initState() {
   // ── Add to cart ────────────────────────────────────────────────────────────
   Future<void> _addToCart() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
+    final String cartItemId = "${widget.productId}_$_selectedVariantIndex";
     final cartRef = FirebaseFirestore.instance
         .collection("cart")
         .doc(userId)
         .collection("items")
-        .doc(widget.productId);
+        .doc(cartItemId);
 
     final doc = await cartRef.get();
     final variant = _variants[_selectedVariantIndex];
+
+    final String color = ((variant["colro"] as String?) ?? "").trim();
+    final Map opts = variant["selectedOptions"] is Map ? variant["selectedOptions"] : {};
+    final String size = _resolveSize(opts);
 
     if (doc.exists) {
       await cartRef.update({"qty": FieldValue.increment(_quantity)});
@@ -164,6 +169,8 @@ void initState() {
         "qty": _quantity,
         "selectedVariantIndex": _selectedVariantIndex,
         "sellerId": widget.productData["sellerId"],
+        "color": color,
+        "size": size,
         "createdAt": FieldValue.serverTimestamp(),
       });
     }

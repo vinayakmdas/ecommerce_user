@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/core/constants/razorpay_keys.dart';
+import 'package:ecommerce_fasion/features/cart/presentaion/widget/order_service.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_error_screen.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_sucess_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,82 +81,31 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
   }
 
 void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final firestore = FirebaseFirestore.instance;
-
-  // 1️⃣ Get Cart Items
-  final cartSnapshot = await firestore
-      .collection("cart")
-      .doc(uid)
-      .collection("items")
-      .get();
-
-  final cartItems = cartSnapshot.docs;
-
-  if (cartItems.isEmpty) return;
-
-String sellerId = cartItems.first["sellerId"].toString();
-  // 2️⃣ Create Order Document
-  final orderRef = firestore.collection("orders").doc();
-String displayOrderId =
-    "#ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
-  await orderRef.set({
-    "userId": uid,
-    "amount": widget.amount,
-    "paymentId": response.paymentId,
-    "status": "success",
-    "createdAt": Timestamp.now(),
-    "sellerId":  sellerId
-  });
-
-  // 3️⃣ Add Items inside order/items
-  for (var item in cartItems) {
-    final data = item.data();
-
-    await orderRef.collection("items").add({
-      "adress" : widget.adress,
-      "adress" : widget.adress,
-      "orderId" : displayOrderId,
-      "productId": item.id,
-      "productName": data["productName"],
-      "price": data["price"],
-      "qty": data["qty"],
-      "sellerId": data["sellerId"],
-      "image": data["images"][0],
-      "status": "pending",
-      
-      
-    });
-  }
-
-  // 4️⃣ Clear Cart
-  for (var item in cartItems) {
-    await item.reference.delete();
-  }
+  await OrderService.placeOrder(
+    paymentId: response.paymentId ?? '',
+    paymentMethod: "Razorpay",
+    totalAmount: widget.amount,
+    address: widget.adress,
+    email: widget.email,
+  );
 
   if (!mounted) return;
 
   final username = await getUsername();
 
   Navigator.pushReplacement(
-    
     context,
     MaterialPageRoute(
-      
       builder: (_) => PaymentSucessScreen(
-        
         amount: widget.amount.toString(),
         receiptName: username,
         transferId: response.paymentId ?? '',
         dataTime: DateTime.now().toString(),
         paymetMethod: "Razorpay",
       ),
-      
     ),
-    
   );
   print("work");
-  
 }
 
   void _handlePaymentError(PaymentFailureResponse response) {
