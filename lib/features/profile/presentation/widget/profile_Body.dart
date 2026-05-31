@@ -54,7 +54,7 @@ class ProfileBody {
                 InkWell(
                   onTap: (){
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Wishlist()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderScreen()));
                   },
                   
                   child: _quickAction(Icons.shopping_bag_outlined, "Orderes", AppColors.orderbaground , AppColors.orderIcon)),

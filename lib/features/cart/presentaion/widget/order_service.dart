@@ -31,15 +31,36 @@ class OrderService {
     final String displayOrderId =
         "#ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
 
+    final List<Map<String, dynamic>> itemsList = [];
+    for (var item in cartItems) {
+      final data = item.data();
+      final String productId = data["id"] ?? item.id;
+      final int qty = data["qty"] ?? 1;
+      final String image = (data["images"] is List && (data["images"] as List).isNotEmpty)
+          ? data["images"][0]
+          : "";
+      itemsList.add({
+        "productId": productId,
+        "productName": data["productName"] ?? "",
+        "price": data["price"] ?? 0,
+        "qty": qty,
+        "sellerId": data["sellerId"] ?? "",
+        "image": image,
+        "color": data["color"] ?? "",
+        "size": data["size"] ?? "",
+      });
+    }
+
     await orderRef.set({
       "userId": userId,
       "amount": totalAmount,
       "totalAmount": totalAmount,
       "paymentId": paymentId,
       "paymentMethod": paymentMethod,
-      "status": "success",
+      "status": "not Delivered",
       "createdAt": FieldValue.serverTimestamp(),
       "sellerId": sellerId,
+      "items": itemsList,
     });
 
     // 3️⃣ Add Items to Order & Reduce Stock

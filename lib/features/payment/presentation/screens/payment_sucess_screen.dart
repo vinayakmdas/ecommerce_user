@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/widget/payment_sucess.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:lottie/lottie.dart';
@@ -29,7 +31,11 @@ class PaymentSucessScreen extends StatefulWidget {
 
 class _PaymentSucessScreenState extends State<PaymentSucessScreen> {
   final ScreenshotController screenshotController = ScreenshotController();
-
+   late List<Map<String, dynamic>> _variants;
+ void initState() {
+    super.initState();
+   
+  }
   @override
   Widget build(BuildContext context) {
     return Screenshot(
@@ -102,5 +108,12 @@ class _PaymentSucessScreenState extends State<PaymentSucessScreen> {
   }
 
 
+ String _resolveSize(Map options) {
+    return options["attr_size_fashion"]?.toString() ??
+          options["attr_waist_size"]?.toString() ??  
+      options["attr_inches"]?.toString() ??
+        options["size"]?.toString() ??
+        "";
+  }
  
 }
