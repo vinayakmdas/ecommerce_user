@@ -10,114 +10,149 @@ class AddressPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.scafoldBaground,
       appBar: AppBar(
-        title: Text('Saved Addresses'),
+        elevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.categoryTitle,
-        foregroundColor: AppColors.white,
+        foregroundColor: Colors.white,
+        title: const Text(
+          "Saved Addresses",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-     body: StreamBuilder<QuerySnapshot>(
-  stream: FirebaseFirestore.instance
-      .collection('user')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('addresses')
-      .orderBy('createdAt', descending: true)
-      .snapshots(),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(child: CircularProgressIndicator());
-    }
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('addresses')
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return const Center(child: Text("No addresses added yet"));
-    }
-
-    final addresses = snapshot.data!.docs;
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              itemCount: addresses.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final data =
-                    addresses[index].data() as Map<String, dynamic>;
-                final docId = addresses[index].id;
-
-                return _buildAddressCard(
-                  label: "Address",
-                  name: data['fullName'] ?? '',
-                  phone: data['phone'] ?? '',
-                  address:
-                      "${data['door']}, ${data['street']}, ${data['city']}, ${data['district']}, ${data['state']} - ${data['pincode']}",
-                  onEdit: () {
-                    // Later: navigate to edit screen
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Column(
+                       
+              children: [
+                Expanded(
+                  child: Column(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center , 
+                   
+                    children: [
+                      Icon(
+                        Icons.location_off_outlined,
+                        size: 80,
+                        color: Colors.grey.shade400,
+                      ),
+                      const SizedBox(height: 16),
+                  Text(
+                    "No addresses found",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Add your first delivery address",
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                   
+                    ],
+                  ),
+                ),
+                
+                
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20,left: 25, right: 25),
+                  child: InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddAddressPage(),
+                      ),
+                    );
                   },
-                  onDelete: () async {
-                    await FirebaseFirestore.instance
-                        .collection('user')
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .collection('addresses')
-                        .doc(docId)
-                        .delete();
+                  child: _addNewAddressButton(),
+                                ),
+                ),  
+              ],
+            );
+          }
+
+          final addresses = snapshot.data!.docs;
+
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: addresses.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final data =
+                          addresses[index].data() as Map<String, dynamic>;
+
+                      final docId = addresses[index].id;
+
+                      return _buildAddressCard(
+                        label: "Delivery Address",
+                        name: data['fullName'] ?? '',
+                        phone: data['phone'] ?? '',
+                        address:
+                            "${data['door']}, ${data['street']}, ${data['city']}, ${data['district']}, ${data['state']} - ${data['pincode']}",
+                        onEdit: () {
+                          // Navigate to edit page later
+                        },
+                        onDelete: () async {
+                          await FirebaseFirestore.instance
+                              .collection('user')
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection('addresses')
+                              .doc(docId)
+                              .delete();
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddAddressPage(),
+                      ),
+                    );
                   },
-                );
-              },
+                  child: _addNewAddressButton(),
+                ),
+              ],
             ),
-          ),
-
-          /// ➕ Add New Address Button (unchanged)
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => AddAddressPage()),
-              );
-            },
-            child: _addNewAddressButton(),
-          ),
-        ],
+          );
+        },
       ),
-    );
-  },
-),
-
     );
   }
-Widget _addNewAddressButton() {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    decoration: BoxDecoration(
-      color: Colors.pink.shade50,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.location_on_outlined,
-            color: Colors.pink.shade300,
-          ),
-        ),
-        const SizedBox(width: 16),
-        const Text(
-          'Add New Address',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        const Spacer(),
-        const Icon(Icons.add),
-      ],
-    ),
-  );
-}
 
   Widget _buildAddressCard({
     required String label,
@@ -128,10 +163,18 @@ Widget _addNewAddressButton() {
     required VoidCallback onDelete,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.amber.shade50,
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.05),
+            blurRadius: 12,
+            spreadRadius: 1,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,65 +182,157 @@ Widget _addNewAddressButton() {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.categoryTitle,
-                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.adressbaground,
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: const Icon(
+                  Icons.location_on,
+                  color: AppColors.adressIcon,
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              Expanded(
                 child: Text(
                   label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              Spacer(),
-              IconButton(
-                onPressed: onEdit,
-                icon: Icon(Icons.edit_outlined, size: 20),
-                color: Colors.grey.shade700,
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+
+              _actionButton(
+                icon: Icons.edit_outlined,
+                color: AppColors.categoryTitle,
+                onTap: onEdit,
               ),
-              SizedBox(width: 8),
-              IconButton(
-                onPressed: onDelete,
-                icon: Icon(Icons.delete_outline, size: 20),
-                color: Colors.red.shade400,
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+
+              const SizedBox(width: 8),
+
+              _actionButton(
+                icon: Icons.delete_outline,
+                color: Colors.red,
+                onTap: onDelete,
               ),
             ],
           ),
-          SizedBox(height: 12),
+
+          const SizedBox(height: 18),
+
           Text(
             name,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Row(
+            children: [
+              Icon(
+                Icons.phone_outlined,
+                size: 16,
+                color: Colors.grey.shade600,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                phone,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.home_outlined,
+                size: 18,
+                color: Colors.grey.shade600,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  address,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: color.withOpacity(.08),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  Widget _addNewAddressButton() {
+    return Container(
+      height: 65,
+      decoration: BoxDecoration(
+        color: AppColors.categoryTitle,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.categoryTitle.withOpacity(.25),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.add_location_alt,
+            color: Colors.white,
+          ),
+          SizedBox(width: 10),
+          Text(
+            "Add New Address",
             style: TextStyle(
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            phone,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade700,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            address,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
             ),
           ),
         ],
       ),
     );
   }
-}
+} 

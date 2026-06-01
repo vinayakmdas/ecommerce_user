@@ -29,7 +29,7 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-
+ 
     return Scaffold(
       backgroundColor: AppColors.scafoldBaground,
       appBar: AppBar(
@@ -52,10 +52,10 @@ class OrderScreen extends StatelessWidget {
       body: userId == null
           ? const Center(child: Text("Please login to view orders"))
           : StreamBuilder<QuerySnapshot>(
+          
               stream: FirebaseFirestore.instance
                   .collection("orders")
-                  .where("userId", isEqualTo: userId)
-                  .orderBy("createdAt", descending: true)
+                  .where("userId",isEqualTo: userId)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

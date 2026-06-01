@@ -217,34 +217,37 @@ static Widget _buildSettingTile(
         )
       ],
     ),
-    child: ListTile(
-      minLeadingWidth: 0,
-      contentPadding: const EdgeInsets.symmetric(vertical: 4),
-      leading: Container(
-        height: 55,
-        width: 55,
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Center(
-          child: Icon(
-            icon,
-            size: 28,
-            color: iconColor,
+    child: Material(
+      color: Colors.transparent,
+      child: ListTile(
+        minLeadingWidth: 0,
+        contentPadding: const EdgeInsets.symmetric(vertical: 4),
+        leading: Container(
+          height: 55,
+          width: 55,
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Center(
+            child: Icon(
+              icon,
+              size: 28,
+              color: iconColor,
+            ),
           ),
         ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.blackColor,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
+          ),
         ),
+        trailing: Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+        onTap: onTap,
       ),
-      trailing: Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-      onTap: onTap,
     ),
   );
 }
