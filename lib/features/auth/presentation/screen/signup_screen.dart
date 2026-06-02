@@ -12,10 +12,9 @@ class SignupScreen extends StatelessWidget {
     TextEditingController usernamecontroller = TextEditingController();
     TextEditingController passwordcontroller = TextEditingController();
     TextEditingController confirmpasswordcontroller = TextEditingController();
-    TextEditingController phonecontroller = TextEditingController();
+    TextEditingController phonenumbercontroller = TextEditingController();
 
-
-    SignupModel signupModel =SignupModel();
+    SignupModel signupModel = SignupModel();
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: AppColors.scafoldBaground,
@@ -41,14 +40,11 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 Signupwidget.conformpasswordHeading(),
                 const SizedBox(height: 12),
-                Signupwidget.conformpassword(
-                  confirmpasswordcontroller,
-                  
-                ),
+                Signupwidget.conformpassword(confirmpasswordcontroller),
                 const SizedBox(height: 20),
                 Signupwidget.phoneNumber(),
                 SizedBox(height: 12),
-                Signupwidget.phoneNumberField(phonecontroller),
+                Signupwidget.phoneNumberField(phonenumbercontroller),
                 SizedBox(height: 24),
                 Signupwidget.termAndCondition(),
                 SizedBox(height: 24),
@@ -57,21 +53,27 @@ class SignupScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: ()async {
-
-                      if(formKey.currentState!.validate()){
-                      if(passwordcontroller.text== confirmpasswordcontroller.text){
-                       await signupModel.signup(
-                        context: context,
-                         username: usernamecontroller.text.trim(),
-                          email: emailcontroller.text.trim(),
-                           password: passwordcontroller.text.trim(),
-                            phonenumber: passwordcontroller.text.trim());
-                      }else{
-
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password and Confirm Password do not match")));
-                      }
-                      }else{
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        if (passwordcontroller.text ==
+                            confirmpasswordcontroller.text) {
+                          await signupModel.signup(
+                            context: context,
+                            username: usernamecontroller.text.trim(),
+                            email: emailcontroller.text.trim(),
+                            password: passwordcontroller.text.trim(),
+                            phonenumber: phonenumbercontroller.text.trim(),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Password and Confirm Password do not match",
+                              ),
+                            ),
+                          );
+                        }
+                      } else {
                         print("not valid");
                       }
                     },
@@ -80,7 +82,6 @@ class SignupScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                     
                     ),
                     child: const Text(
                       "Sign Up",
