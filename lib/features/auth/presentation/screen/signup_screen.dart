@@ -3,19 +3,36 @@ import 'package:ecommerce_fasion/features/auth/presentation/widget/singUpwidget.
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController emailcontroller = TextEditingController();
-    TextEditingController usernamecontroller = TextEditingController();
-    TextEditingController passwordcontroller = TextEditingController();
-    TextEditingController confirmpasswordcontroller = TextEditingController();
-    TextEditingController phonenumbercontroller = TextEditingController();
+  State<SignupScreen> createState() => _SignupScreenState();
+}
 
-    SignupModel signupModel = SignupModel();
-    final formKey = GlobalKey<FormState>();
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController emailcontroller = TextEditingController();
+  final TextEditingController usernamecontroller = TextEditingController();
+  final TextEditingController passwordcontroller = TextEditingController();
+  final TextEditingController confirmpasswordcontroller = TextEditingController();
+  final TextEditingController phonenumbercontroller = TextEditingController();
+
+  final SignupModel signupModel = SignupModel();
+  final formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    emailcontroller.dispose();
+    usernamecontroller.dispose();
+    passwordcontroller.dispose();
+    confirmpasswordcontroller.dispose();
+    phonenumbercontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scafoldBaground,
       body: Padding(
@@ -53,40 +70,59 @@ class SignupScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        if (passwordcontroller.text ==
-                            confirmpasswordcontroller.text) {
-                          await signupModel.signup(
-                            context: context,
-                            username: usernamecontroller.text.trim(),
-                            email: emailcontroller.text.trim(),
-                            password: passwordcontroller.text.trim(),
-                            phonenumber: phonenumbercontroller.text.trim(),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Password and Confirm Password do not match",
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        print("not valid");
-                      }
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            if (formKey.currentState!.validate()) {
+                              if (passwordcontroller.text ==
+                                  confirmpasswordcontroller.text) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await signupModel.signup(
+                                  context: context,
+                                  username: usernamecontroller.text.trim(),
+                                  email: emailcontroller.text.trim(),
+                                  password: passwordcontroller.text.trim(),
+                                  phonenumber: phonenumbercontroller.text.trim(),
+                                );
+                                if (mounted) {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Password and Confirm Password do not match",
+                                    ),
+                                  ),
+                                );
+                              }
+                            } else {
+                              print("not valid");
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.addToCart,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      "Sign Up",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Sign Up",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                   ),
                 ),
                 SizedBox(height: 18),
