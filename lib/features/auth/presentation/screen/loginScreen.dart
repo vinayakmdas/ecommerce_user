@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/core/navigation/constants/app_Navigator.dart';
-import 'package:ecommerce_fasion/core/navigation/presentaion/screen/navigator.dart';
 import 'package:ecommerce_fasion/features/auth/presentation/widget/loginwidget.dart';
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,7 +52,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 const SizedBox(height: 12),
                 LoginWidgets.loginPassword(passwordcontroller),
                 SizedBox(height: 10),
-                LoginWidgets.forgotPasswordText(),
+                LoginWidgets.forgotPasswordText(context),
                 SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity, // takes full available width
@@ -145,7 +144,7 @@ class _LoginscreenState extends State<Loginscreen> {
         await prefs.setBool('isLogin', true);
         await prefs.setString('email', email);
 
-        AppNavigator.pushReplacement(context, BottomNavigator());
+        router.go('/bottomnScreen');
       }
     } on FirebaseAuthException catch (e) {
       if (context.mounted) {

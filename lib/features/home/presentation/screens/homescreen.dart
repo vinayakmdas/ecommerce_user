@@ -9,31 +9,28 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      
       child: Scaffold(
         body: SingleChildScrollView(
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             
               CarouselWidget.carousel(context),
-                
+
               const SizedBox(height: 20),
               Padding(
-              padding: const EdgeInsets.only(left: 9,top: 35 ),
+                padding: const EdgeInsets.only(left: 9, top: 35),
                 child: Column(
                   children: [
                     ShopCategory.shopCategoryHeading(),
-                    SizedBox(height: 15,),
+                    SizedBox(height: 15),
                     ShopCategory.circleBrand(context),
 
-                    Productgrid()
-                  ], 
+                    Productgrid(),
+                  ],
                 ),
-              )
+              ),
             ],
-          ), 
+          ),
         ),
       ),
     );

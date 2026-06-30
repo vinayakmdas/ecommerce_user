@@ -6,16 +6,27 @@ class Signupwidget {
 
 
 
-  static Widget appwelcomeText(){
+  static Widget appwelcomeText(BuildContext context){
+double screenwidth  =MediaQuery.of(context).size.width;
+double fontsize ;
 
+if(screenwidth<360){
+
+  fontsize =26;
+}else if(screenwidth <600){
+ fontsize=26;
+
+}else{
+  fontsize =30;
+}
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Text("Sign Up & Start Shopping!",style: TextStyle(color:AppColors.tittle,fontSize: 30,fontWeight: FontWeight.bold
+      Text("Sign Up & Start Shopping!",style: TextStyle(color:AppColors.tittle,fontSize: fontsize,fontWeight: FontWeight.bold
       ),)
     ],
   );
-}
+}   
 
 static Widget nameHeading(){
 return  Row(
@@ -320,22 +331,86 @@ static Widget phoneNumberField(TextEditingController controller) {
 
 
 
-static Widget termAndCondition(){
-    bool value = false;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Checkbox(value: value, onChanged:(newvalue){
-          value= newvalue!;
-        }),
-               Text("I agree and to the ",style: TextStyle(color: AppColors.caption,fontSize: 13 ,fontWeight: FontWeight.w500),),
-TextButton(onPressed: (){}, child: Text("Terms",style: TextStyle(color: AppColors.addToCart))),
-Text(" & ",style: TextStyle(color: AppColors.caption,fontSize: 13 ,fontWeight: FontWeight.w500),),
-TextButton(onPressed: (){}, child: Text("Conditions",style: TextStyle(color: AppColors.addToCart))),
+static Widget termAndCondition(BuildContext context) {
+  bool value = false;
 
-      ]
-    );
+  double screenWidth = MediaQuery.of(context).size.width;
+
+  double fontSize;
+  if (screenWidth < 360) {
+    fontSize = 11;
+  } else if (screenWidth < 600) {
+    fontSize = 13;
+  } else {
+    fontSize = 15;
   }
+
+  return Row(
+    // crossAxisAlignment: CrossAxisAlignment.start, 
+    children: [
+      Checkbox(
+        
+        value: value,
+        onChanged: (newValue) {
+          value = newValue!;
+        },
+      ),
+      Expanded(
+        child: Wrap(
+          // crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              "I agree to the ",
+              style: TextStyle(
+                color: AppColors.caption,
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                "Terms",
+                style: TextStyle(
+                  color: AppColors.addToCart,
+                  fontSize: fontSize,
+                ),
+              ),
+            ),
+            Text(
+              " & ",
+              style: TextStyle(
+                color: AppColors.caption,
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                "Conditions",
+                style: TextStyle(
+                  color: AppColors.addToCart,
+                  fontSize: fontSize,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+} 
 
 
 

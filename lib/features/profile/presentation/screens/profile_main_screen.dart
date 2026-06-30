@@ -36,19 +36,21 @@ class ProfileMainScreen extends StatelessWidget {
             },
             child: Scaffold(
               backgroundColor: AppColors.scafoldBaground,
-              body: Column(
-                children: [
-                  SizedBox(
-                    height: 300,
-                    width: double.infinity,
-                    child: Profileheader.buildHeader(context),
-                  ),
-                  ProfileBody.buildBody(context),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: ProfileBody.buildAccountList(context),
-                  ),
-                ],
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 300,
+                      width: double.infinity,
+                      child: Profileheader.buildHeader(context),
+                    ),
+                    ProfileBody.buildBody(context),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25),
+                      child: ProfileBody.buildAccountList(context),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

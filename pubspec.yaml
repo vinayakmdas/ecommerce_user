@@ -59,6 +59,8 @@ dependencies:
   flutter_animate: ^4.5.2
   image_picker: ^1.2.2
   google_sign_in: ^6.2.1
+  shimmer_animation: ^2.2.2+1
+  shimmer: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

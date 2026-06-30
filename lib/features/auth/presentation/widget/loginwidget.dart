@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fasion/core/navigation/constants/app_Navigator.dart';
-import 'package:ecommerce_fasion/core/navigation/presentaion/screen/navigator.dart';
 
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
+import 'package:ecommerce_fasion/features/auth/presentation/screen/forgotScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -169,7 +169,7 @@ class LoginWidgets {
             else if (!RegExp(r'[0-9]').hasMatch(value)) {
               return 'Include at least one number';
             }
-            return null; // ✅ means valid
+            return null;
           },
           decoration: InputDecoration(
             hintText: "Enter your password",
@@ -210,7 +210,7 @@ class LoginWidgets {
     );
   }
 
-  static Widget forgotPasswordText() {
+  static Widget forgotPasswordText(BuildContext context) {
     bool value = false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -232,7 +232,9 @@ class LoginWidgets {
 
         Spacer(),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            AppNavigator.push(context, ForgotPasswordPage());
+          },
           child: Text(
             "Forgotton Password",
             style: TextStyle(color: AppColors.addToCart),
@@ -370,7 +372,7 @@ class LoginWidgets {
       await storingDataSharedPrefence(user.email ?? '');
 
       // ✅ Use the captured router — no context needed, no mounted check needed
-      AppNavigator.pushReplacement(context, BottomNavigator());
+      router.go('/bottomnScreen');
     } catch (e) {
       print("GOOGLE SIGN IN ERROR: $e");
       // ✅ Still safe to check mounted for SnackBar since it's UI-only

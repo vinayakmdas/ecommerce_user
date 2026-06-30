@@ -42,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
             key: formKey,
             child: Column(
               children: [
-                Signupwidget.appwelcomeText(),
+                Signupwidget.appwelcomeText(context),
                 SizedBox(height: 34),
                 Signupwidget.nameHeading(),
                 const SizedBox(height: 12),
@@ -63,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 12),
                 Signupwidget.phoneNumberField(phonenumbercontroller),
                 SizedBox(height: 24),
-                Signupwidget.termAndCondition(),
+                Signupwidget.termAndCondition(context),
                 SizedBox(height: 24),
 
                 SizedBox(

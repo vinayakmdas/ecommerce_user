@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 
 import 'package:flutter/material.dart';
 
@@ -6,27 +7,27 @@ class CarouselWidget {
   static List<Map<String, String>> carouselData = [
     {
       'image':
-          'https://i.pinimg.com/1200x/6b/b6/64/6bb66426b5a41d816a5bff21f7704b4c.jpg',
+          'https://res.cloudinary.com/logocloudname/image/upload/v1780660077/47630fcd-22c9-4209-bd5c-830a384138e3.png',
       'text': 'Stylish Shirt ',
     },
     {
       'image':
-          'https://i.pinimg.com/1200x/05/e2/1c/05e21cb0736aac2b93b8efa9093c3b6c.jpg',
+          'https://res.cloudinary.com/logocloudname/image/upload/v1780660389/0135af6f-2ec8-4f3c-b1f0-7c9aa91faeda.png',
       'text': 'Casual Jeans ',
     },
     {
       'image':
-          'https://i.pinimg.com/1200x/9b/94/8a/9b948a909015f61161719a31e5165c96.jpg',
+          'https://res.cloudinary.com/logocloudname/image/upload/v1780660064/bf457405-2825-410b-ba4e-0e301bb06258.png',
       'text': 'T-Shirt –',
     },
-    { 
+    {
       'image':
-          'https://i.pinimg.com/1200x/13/17/5a/13175a7be14ce6bb9da92a4c0deac33e.jpg',
+          'https://res.cloudinary.com/logocloudname/image/upload/v1780660038/7cdfdbd6-5691-4214-9528-c507485689ac.png',
       'text': 'T-Shirt',
     },
     {
       'image':
-          'https://i.pinimg.com/1200x/44/0e/5e/440e5e07a537f3dbe5a466ce27c7e967.jpg',
+          'https://res.cloudinary.com/logocloudname/image/upload/v1780660013/WhatsApp_Image_2026-06-05_at_5.07.03_PM_sixm96.jpg',
       'text': 'T-Shirt ',
     },
   ];
@@ -40,28 +41,23 @@ class CarouselWidget {
             .map(
               (item) => Stack(
                 children: [
-                  Image.network(
-                    item['image']!,
-                    fit: BoxFit.cover,
-                    width: 1000,
-                  ),
-      
+                  Image.network(item['image']!, fit: BoxFit.cover, width: 1000),
+
                   Positioned(
                     bottom: 34,
-                    child: 
-                  
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20), 
-                    child: Text(
-                      item["text"]!,style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 34,
-                              fontWeight: FontWeight.bold,)
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        item["text"]!,
+                        style: TextStyle(
+                          color: AppColors.categoryTitle,
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  )
-                  )
+                  ),
                 ],
-                
               ),
             )
             .toList(),
