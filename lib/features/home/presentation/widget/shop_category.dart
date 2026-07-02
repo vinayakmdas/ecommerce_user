@@ -75,13 +75,13 @@ class ShopCategory {
     return SizedBox(
       height: 110, // ⬅️ reduced from 130 to match target design
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemCount: categoriesItem.length,
         itemBuilder: (context, index) {
           final item = categoriesItem[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(

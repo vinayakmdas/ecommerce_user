@@ -345,70 +345,75 @@ static Widget termAndCondition(BuildContext context) {
     fontSize = 15;
   }
 
-  return Row(
-    // crossAxisAlignment: CrossAxisAlignment.start, 
-    children: [
-      Checkbox(
-        
-        value: value,
-        onChanged: (newValue) {
-          value = newValue!;
-        },
-      ),
-      Expanded(
-        child: Wrap(
-          // crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(
-              "I agree to the ",
-              style: TextStyle(
-                color: AppColors.caption,
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                "Terms",
-                style: TextStyle(
-                  color: AppColors.addToCart,
-                  fontSize: fontSize,
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return Row(
+        // crossAxisAlignment: CrossAxisAlignment.start, 
+        children: [
+          Checkbox(
+            value: value,
+            onChanged: (newValue) {
+              setState(() {
+                value = newValue!;
+              });
+            },
+          ),
+          Expanded(
+            child: Wrap(
+              // crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  "I agree to the ",
+                  style: TextStyle(
+                    color: AppColors.caption,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ),
-            Text(
-              " & ",
-              style: TextStyle(
-                color: AppColors.caption,
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                "Conditions",
-                style: TextStyle(
-                  color: AppColors.addToCart,
-                  fontSize: fontSize,
+                TextButton(
+                  onPressed: () {},
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    "Terms",
+                    style: TextStyle(
+                      color: AppColors.addToCart,
+                      fontSize: fontSize,
+                    ),
+                  ),
                 ),
-              ),
+                Text(
+                  " & ",
+                  style: TextStyle(
+                    color: AppColors.caption,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    "Conditions",
+                    style: TextStyle(
+                      color: AppColors.addToCart,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ],
+          ),
+        ],
+      );
+    },
   );
 } 
 

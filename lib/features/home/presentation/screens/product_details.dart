@@ -1,7 +1,6 @@
 // product_details_screen.dart
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/home/presentation/bloc/imageIndicator/image_indicator_bloc.dart';
-import 'package:ecommerce_fasion/features/home/presentation/bloc/variant_bloc/variant_bloc.dart';
 import 'package:ecommerce_fasion/features/home/presentation/widget/product_details/widget/detail_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +26,7 @@ Map<String, List<Map<String, dynamic>>> _groupByColor(List variants) {
 // ─────────────────────────────────────────────────────────────────────────────
 // State holder (plain class — lives in StatefulWidget state)
 // ─────────────────────────────────────────────────────────────────────────────
+// ignore: unused_element
 class _Selection {
   final String color;       // e.g. "red"
   final int variantIndex;   // index in the ORIGINAL flat variants list

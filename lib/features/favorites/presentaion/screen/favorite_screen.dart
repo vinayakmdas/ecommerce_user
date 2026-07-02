@@ -1,5 +1,7 @@
 import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/favorites/presentaion/widget/favorites_custome.dart';
+import 'package:ecommerce_fasion/features/home/presentation/screens/product_details.dart';
+import 'package:ecommerce_fasion/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -42,95 +44,125 @@ class FavoriteScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = favorites[index];
 
-              return Card(
-                color: AppColors.container,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 3,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 16,
-                ),
+              // Rebuild a "variants" shaped map so ProductDetailsScreen
+              // gets the same structure it expects from the products collection.
+              final productData = {
+                "productName": item["productName"] ?? "",
+                "brandId": item["brandId"] ?? "",
+                "description": item["description"] ?? "",
+                "sellerId": item["sellerId"],
+                "variants": [
+                  {
+                    "images": item["images"] ?? [],
+                    "price": item["price"] ?? 0,
+                    "regularPrise": item["regularPrice"] ?? 0,
+                  },
+                ],
+              };
 
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      // ------- IMAGE -------
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          item["images"][0],
-                          width: 110,
-                          height: 110,
-                          fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  AppRouter.push(
+                    context,
+                    ProductDetailsScreen(
+                      productData: productData,
+                      productId: item["id"],
+                    ),
+                  );
+                },
+                child: Card(
+                  color: AppColors.container,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 16,
+                  ),
+
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        // ------- IMAGE -------
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            item["images"][0],
+                            width: 110,
+                            height: 110,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(width: 15),
+                        const SizedBox(width: 15),
 
-                      // -------- TEXT DETAILS --------
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item["brandId"] ?? "",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                        // -------- TEXT DETAILS --------
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item["brandId"] ?? "",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
+                              const SizedBox(height: 4),
 
-                            Text(
-                              item["productName"] ?? "",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                              Text(
+                                item["productName"] ?? "",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
 
-                            const SizedBox(height: 6),
+                              const SizedBox(height: 6),
 
-                            Text(
-                              "₹${item['price']}",
-                              style: const TextStyle(
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.teal,
+                              Text(
+                                "₹${item['price']}",
+                                style: const TextStyle(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // ---------- HEART ICON ----------
-                      InkWell(
-                        onTap: () async {
-                          await FavoritesCustome.removeFavorite(
-                            user.uid,
-                            item["id"],
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(color: AppColors.blackColor, blurRadius: 5),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.favorite,
-                            color: Colors.red, // ALWAYS RED
+                        ),
+
+                        // ---------- HEART ICON ----------
+                        InkWell(
+                          onTap: () async {
+                            await FavoritesCustome.removeFavorite(
+                              user.uid,
+                              item["id"],
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.blackColor,
+                                  blurRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.favorite,
+                              color: Colors.red, // ALWAYS RED
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

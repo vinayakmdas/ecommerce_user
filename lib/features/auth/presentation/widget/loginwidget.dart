@@ -212,35 +212,40 @@ class LoginWidgets {
 
   static Widget forgotPasswordText(BuildContext context) {
     bool value = false;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Checkbox(
-          value: value,
-          onChanged: (newvalue) {
-            value = newvalue!;
-          },
-        ),
-        Text(
-          "Remember me",
-          style: TextStyle(
-            color: AppColors.caption,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-
-        Spacer(),
-        TextButton(
-          onPressed: () {
-            AppNavigator.push(context, ForgotPasswordPage());
-          },
-          child: Text(
-            "Forgotton Password",
-            style: TextStyle(color: AppColors.addToCart),
-          ),
-        ),
-      ],
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Checkbox(
+              value: value,
+              onChanged: (newvalue) {
+                setState(() {
+                  value = newvalue!;
+                });
+              },
+            ),
+            Text(
+              "Remember me",
+              style: TextStyle(
+                color: AppColors.caption,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                AppNavigator.push(context, ForgotPasswordPage());
+              },
+              child: Text(
+                "Forgotton Password",
+                style: TextStyle(color: AppColors.addToCart),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

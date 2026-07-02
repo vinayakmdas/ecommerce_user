@@ -5,6 +5,7 @@ import 'package:ecommerce_fasion/core/theme/presentaion/colors.dart';
 import 'package:ecommerce_fasion/features/home/presentation/widget/category_widget.dart';
 import 'package:ecommerce_fasion/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 
 class CategoryScreen extends StatelessWidget {
@@ -67,11 +68,11 @@ class CategoryScreen extends StatelessWidget {
                     return Card(
                       color: AppColors.container,
                       margin: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
+                        vertical: 2,
+                        horizontal: 16,
                       ), // adds outer spacing
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0), // inner spacing
+                        padding: const EdgeInsets.all(8.0), // inner spacing
                         child: ListTile(
                           title: Text(
                             brand,
@@ -89,15 +90,16 @@ class CategoryScreen extends StatelessWidget {
                             ),
                           ),
                           onTap: () {
-AppRouter.push(context, BrandItem(brandName: brand, categoryName: categoryId));
-                                
-
+                            AppRouter.push(context, BrandItem(brandName: brand, categoryName: categoryId));
                           },
                         ),
                       ),
-                    );
+                    )
+                    .animate()
+                    .fadeIn(duration: 400.ms, delay: (index * 50).ms)
+                    .slideX(begin: 0.1, end: 0.0, curve: Curves.easeOut);
                   },
-                  separatorBuilder: (context, index) => SizedBox(height: 24),
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
                 );
               },
             ),

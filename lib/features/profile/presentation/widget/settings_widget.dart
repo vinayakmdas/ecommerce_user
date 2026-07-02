@@ -14,7 +14,7 @@ class SettingsWidget {
 
   static final preference = SharedPreferences.getInstance;
   static showLogoutDialog(BuildContext context) async {
-    final shouldLogout = await showDialog<bool>(
+    await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(

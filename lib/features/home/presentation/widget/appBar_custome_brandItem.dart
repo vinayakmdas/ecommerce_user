@@ -9,6 +9,7 @@ class ProductCard extends StatelessWidget {
   final String productName;
   final num price;
   final num regularPrice;
+  final bool isFavorite;
   final VoidCallback onFavoriteTap;
 
   const ProductCard({
@@ -17,6 +18,7 @@ class ProductCard extends StatelessWidget {
     required this.productName,
     required this.price,
     required this.regularPrice,
+    required this.isFavorite,
     required this.onFavoriteTap,
   });
 
@@ -94,7 +96,10 @@ class ProductCard extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: onFavoriteTap,
-                  icon: const Icon(Icons.favorite_border_outlined),
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  ),
                 ),
               ],
             ),

@@ -17,18 +17,11 @@ class HomeScreen extends StatelessWidget {
               CarouselWidget.carousel(context),
 
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 9, top: 35),
-                child: Column(
-                  children: [
-                    ShopCategory.shopCategoryHeading(),
-                    SizedBox(height: 15),
-                    ShopCategory.circleBrand(context),
-
-                    Productgrid(),
-                  ],
-                ),
-              ),
+              ShopCategory.shopCategoryHeading(),
+              const SizedBox(height: 10),
+              ShopCategory.circleBrand(context),
+              const SizedBox(height: 20),
+              const Productgrid(),
             ],
           ),
         ),

@@ -31,7 +31,6 @@ class PaymentSucessScreen extends StatefulWidget {
 
 class _PaymentSucessScreenState extends State<PaymentSucessScreen> {
   final ScreenshotController screenshotController = ScreenshotController();
-   late List<Map<String, dynamic>> _variants;
  void initState() {
     super.initState();
    
@@ -108,12 +107,5 @@ class _PaymentSucessScreenState extends State<PaymentSucessScreen> {
   }
 
 
- String _resolveSize(Map options) {
-    return options["attr_size_fashion"]?.toString() ??
-          options["attr_waist_size"]?.toString() ??  
-      options["attr_inches"]?.toString() ??
-        options["size"]?.toString() ??
-        "";
-  }
  
 }

@@ -8,15 +8,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PersonolScreen extends StatelessWidget {
+class PersonolScreen extends StatefulWidget {
   const PersonolScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController phoneController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
+  State<PersonolScreen> createState() => _PersonolScreenState();
+}
 
+class _PersonolScreenState extends State<PersonolScreen> {
+  late final TextEditingController usernameController;
+  late final TextEditingController phoneController;
+  late final TextEditingController emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    usernameController = TextEditingController();
+    phoneController = TextEditingController();
+    emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Personal Data"),
@@ -105,39 +126,39 @@ class PersonolScreen extends StatelessWidget {
                           const SizedBox(height: 30),
 
                           // Save Button
-                         SizedBox(
-                          width: double.infinity,
-                           child: ElevatedButton(
-                                                 style: ElevatedButton.styleFrom(
-                                                   padding: const EdgeInsets.symmetric(vertical: 14),
-                                                   backgroundColor: AppColors.errormessage,
-                                                   shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                                                   ),
-                                                 ),
-                                                 onPressed: () {
-                                                 final uid = FirebaseAuth.instance.currentUser!.uid;
-                                               context.read<PersonolBloc>().add(
-                                                 UpdatePersonolData(
-                                                   uid,
-                                                   UserModel(
-                            username   : usernameController.text.trim(),
-                            phonenumber: phoneController.text.trim(),
-                            email: emailController.text.trim(),
-                                                   ),
-                                                 ),
-                                               );
-                                             }, 
-                                                 child: const Text(
-                                                   "Save Changes",
-                                                   style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                                                   ),
-                                                 ),
-                                               ),
-                         ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                backgroundColor: AppColors.errormessage,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed: () {
+                                final uid = FirebaseAuth.instance.currentUser!.uid;
+                                context.read<PersonolBloc>().add(
+                                  UpdatePersonolData(
+                                    uid,
+                                    UserModel(
+                                      username   : usernameController.text.trim(),
+                                      phonenumber: phoneController.text.trim(),
+                                      email: emailController.text.trim(),
+                                    ),
+                                  ),
+                                );
+                              }, 
+                              child: const Text(
+                                "Save Changes",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

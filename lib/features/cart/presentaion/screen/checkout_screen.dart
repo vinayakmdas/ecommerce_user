@@ -9,24 +9,41 @@ import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/p
 import 'package:ecommerce_fasion/features/cart/presentaion/bloc/payment_method/payment_method_state.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/widget/checkout_Widget.dart';
 import 'package:ecommerce_fasion/features/cart/presentaion/widget/order_service.dart';
-import 'package:ecommerce_fasion/features/payment/presentation/screens/RazorpayScreen.dart';
+import 'package:ecommerce_fasion/features/payment/presentation/screens/razorpayScreen.dart';
 import 'package:ecommerce_fasion/features/payment/presentation/screens/payment_sucess_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CheckoutScreens extends StatelessWidget {
+class CheckoutScreens extends StatefulWidget {
   final int amount;
   const CheckoutScreens({super.key, required this.amount});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
+  State<CheckoutScreens> createState() => _CheckoutScreensState();
+}
 
+class _CheckoutScreensState extends State<CheckoutScreens> {
+  late final TextEditingController emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers : [
         BlocProvider(create: (_) => AddressSelectionBloc()),
-    BlocProvider(create: (_) => PaymentMethodBloc()),
+        BlocProvider(create: (_) => PaymentMethodBloc()),
       ],
       child: Scaffold(
         backgroundColor: AppColors.scafoldBaground,
@@ -54,8 +71,6 @@ class CheckoutScreens extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-        
-           
         
             final addresses = snapshot.data!.docs;
         
@@ -130,137 +145,137 @@ class CheckoutScreens extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
         
-        Text(
-          "Payment Method",
-          style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.w600,
-            color: AppColors.blackColor,
-          ),
-        ),
-        
-        const SizedBox(height: 16),
-        
-        BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
-          builder: (context, paymentState) {
-            return Column(
-              children: [
-        CheckoutWidget.paymentMethodCard(
-          title: "Cash on Delivery",
-          isSelected: paymentState.selectedMethod == "COD",
-          onTap: () {
-            context
-                .read<PaymentMethodBloc>()
-                .add(SelectPaymentMethod("COD"));
-          },
-        ),
-        const SizedBox(height: 12),
-        CheckoutWidget.paymentMethodCard(
-          title: "UPI / Online Payment",
-          isSelected: paymentState.selectedMethod == "UPI",
-          onTap: () {
-            context
-                .read<PaymentMethodBloc>()
-                .add(SelectPaymentMethod("UPI"));
-          },
-        ),
-              ],
-            );
-          },
-        ),
-        const SizedBox(height: 30),
-        
-        BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
-          builder: (context, addressState) {
-            return BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
-              builder: (context, paymentState) {
-        final bool canProceed =
-            addressState.selectedAddressId != null &&
-            paymentState.selectedMethod != null;
-        
-        return SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: canProceed
-                  ? AppColors.categoryTitle
-                  : Colors.grey,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            onPressed: canProceed
-                ? () async {
-                    final selectedDoc = addresses.firstWhere(
-                      (doc) => doc.id == addressState.selectedAddressId,
-                    );
+                  Text(
+                    "Payment Method",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
                   
-                    final data = selectedDoc.data() as Map<String, dynamic>;
+                  const SizedBox(height: 16),
                   
-                    final fullAddress =
-                        "${data['door']}, ${data['street']}, ${data['city']}, "
-                        "${data['district']}, ${data['state']} - ${data['pincode']}";
-
-                    if (paymentState.selectedMethod == "COD") {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) => const Center(child: CircularProgressIndicator()),
-                      );
-
-                      final uid = FirebaseAuth.instance.currentUser!.uid;
-                      final userDoc = await FirebaseFirestore.instance
-                          .collection("user")
-                          .doc(uid)
-                          .get();
-                      final username = userDoc.exists ? (userDoc.data()?['username'] ?? 'Unknown User') : 'Unknown User';
-                      final email = emailController.text;
-                      final String customPaymentId = "COD-${DateTime.now().millisecondsSinceEpoch}";
-
-                      await OrderService.placeOrder(
-                        paymentId: customPaymentId,
-                        paymentMethod: "Cash on Delivery",
-                        totalAmount: amount,
-                        address: fullAddress,
-                        email: email,
-                      );
-
-                      if (context.mounted) {
-                        Navigator.pop(context); // Dismiss loading spinner
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaymentSucessScreen(
-                              amount: amount.toString(),
-                              receiptName: username,
-                              transferId: customPaymentId,
-                              dataTime: DateTime.now().toString(),
-                              paymetMethod: "Cash on Delivery",
-                            ),
+                  BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+                    builder: (context, paymentState) {
+                      return Column(
+                        children: [
+                          CheckoutWidget.paymentMethodCard(
+                            title: "Cash on Delivery",
+                            isSelected: paymentState.selectedMethod == "COD",
+                            onTap: () {
+                              context
+                                  .read<PaymentMethodBloc>()
+                                  .add(SelectPaymentMethod("COD"));
+                            },
                           ),
-                        );
-                      }
-                    }
-                    else {
-                      AppNavigator.push(
-                        context,
-                        RazorpayScreen(
-                          email: emailController.text,
-                          amount: amount,
-                          adress: fullAddress, 
-                        ),
+                          const SizedBox(height: 12),
+                          CheckoutWidget.paymentMethodCard(
+                            title: "UPI / Online Payment",
+                            isSelected: paymentState.selectedMethod == "UPI",
+                            onTap: () {
+                              context
+                                  .read<PaymentMethodBloc>()
+                                  .add(SelectPaymentMethod("UPI"));
+                            },
+                          ),
+                        ],
                       );
-                    }
-                  }
-                : null,
-            child: const Text(
-              "Next",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ),
-        );
-              },
-            );
-          },
-        ),
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  
+                  BlocBuilder<AddressSelectionBloc, AddressSelectionState>(
+                    builder: (context, addressState) {
+                      return BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+                        builder: (context, paymentState) {
+                          final bool canProceed =
+                              addressState.selectedAddressId != null &&
+                              paymentState.selectedMethod != null;
+                          
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: canProceed
+                                    ? AppColors.categoryTitle
+                                    : Colors.grey,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              onPressed: canProceed
+                                  ? () async {
+                                      final selectedDoc = addresses.firstWhere(
+                                        (doc) => doc.id == addressState.selectedAddressId,
+                                      );
+                                    
+                                      final data = selectedDoc.data() as Map<String, dynamic>;
+                                    
+                                      final fullAddress =
+                                          "${data['door']}, ${data['street']}, ${data['city']}, "
+                                          "${data['district']}, ${data['state']} - ${data['pincode']}";
+                                  
+                                      if (paymentState.selectedMethod == "COD") {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) => const Center(child: CircularProgressIndicator()),
+                                        );
+                                  
+                                        final uid = FirebaseAuth.instance.currentUser!.uid;
+                                        final userDoc = await FirebaseFirestore.instance
+                                            .collection("user")
+                                            .doc(uid)
+                                            .get();
+                                        final username = userDoc.exists ? (userDoc.data()?['username'] ?? 'Unknown User') : 'Unknown User';
+                                        final email = emailController.text;
+                                        final String customPaymentId = "COD-${DateTime.now().millisecondsSinceEpoch}";
+                                  
+                                        await OrderService.placeOrder(
+                                          paymentId: customPaymentId,
+                                          paymentMethod: "Cash on Delivery",
+                                          totalAmount: widget.amount,
+                                          address: fullAddress,
+                                          email: email,
+                                        );
+                                  
+                                        if (context.mounted) {
+                                          Navigator.pop(context); // Dismiss loading spinner
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => PaymentSucessScreen(
+                                                amount: widget.amount.toString(),
+                                                receiptName: username,
+                                                transferId: customPaymentId,
+                                                dataTime: DateTime.now().toString(),
+                                                paymetMethod: "Cash on Delivery",
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      else {
+                                        AppNavigator.push(
+                                          context,
+                                          RazorpayScreen(
+                                            email: emailController.text,
+                                            amount: widget.amount,
+                                            adress: fullAddress, 
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  : null,
+                              child: const Text(
+                                "Next",
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
         
                 ],
               ),
